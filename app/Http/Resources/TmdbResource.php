@@ -104,7 +104,7 @@ class TmdbResource
 
         $imdbId = $data['imdb_id'] ?? ($data['external_ids']['imdb_id'] ?? null);
 
-        return [
+        $result = [
             'id' => $data['id'],
             'imdb_id' => $imdbId ? (str_starts_with($imdbId, 'tt') ? $imdbId : 'tt' . $imdbId) : null,
             'media_type' => $mediaType,
@@ -195,6 +195,25 @@ class TmdbResource
                 ->map(fn($item) => $this->formatItem($item, $mediaType))
                 ->all(),
         ];
+
+        if ($mediaType === 'tv') {
+            $result['seasons'] = collect($data['seasons'] ?? [])
+                ->filter(fn($s) => ($s['season_number'] ?? 0) >= 0)
+                ->map(fn($s) => [
+                    'id' => $s['id'] ?? null,
+                    'season_number' => (int) ($s['season_number'] ?? 0),
+                    'name' => $s['name'] ?? '',
+                    'episode_count' => (int) ($s['episode_count'] ?? 0),
+                    'poster_path' => self::imageUrl($s['poster_path'] ?? null),
+                    'overview' => $s['overview'] ?? '',
+                ])
+                ->values()
+                ->all();
+        } else {
+            $result['seasons'] = [];
+        }
+
+        return $result;
     }
 
     public function formatPerson(array $data): array
@@ -299,5 +318,30 @@ class TmdbResource
         $translated = __($key);
 
         return $translated !== $key ? $translated : $status;
+    }
+
+    /**
+     * Format season episodes for API response.
+     *
+     * @param  array{episodes: array}  $seasonData
+     * @return array<int, array{id: int, name: string, overview: string, still_path: string|null, runtime: string|null, episode_number: int, season_number: int, air_date: string|null}>
+     */
+    public function formatSeasonEpisodes(array $seasonData): array
+    {
+        $episodes = $seasonData['episodes'] ?? [];
+
+        return collect($episodes)
+            ->map(fn($ep) => [
+                'id' => (int) ($ep['id'] ?? 0),
+                'name' => $ep['name'] ?? '',
+                'overview' => $ep['overview'] ?? '',
+                'still_path' => self::imageUrl($ep['still_path'] ?? null, 'w300'),
+                'runtime' => $this->formatRuntime($ep['runtime'] ?? null),
+                'episode_number' => (int) ($ep['episode_number'] ?? 0),
+                'season_number' => (int) ($ep['season_number'] ?? 0),
+                'air_date' => $this->formatDate($ep['air_date'] ?? null),
+            ])
+            ->values()
+            ->all();
     }
 }

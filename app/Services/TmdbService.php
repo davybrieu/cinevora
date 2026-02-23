@@ -229,6 +229,16 @@ class TmdbService
         ]);
     }
 
+    /**
+     * Get season details including episodes list.
+     *
+     * @return array{name: string, episodes: array, season_number: int, ...}
+     */
+    public function getSeasonDetails(int $tvId, int $seasonNumber): array
+    {
+        return $this->get("/tv/{$tvId}/season/{$seasonNumber}", []);
+    }
+
     public function getReviews(int $id, string $mediaType): array
     {
         $params = ['api_key' => $this->apiKey];

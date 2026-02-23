@@ -36,4 +36,15 @@ class DetailController extends Controller
             'item' => $this->resource->formatDetail($data, $type),
         ]);
     }
+
+    /**
+     * Return episodes for a TV season (JSON for frontend fetch).
+     */
+    public function seasonEpisodes(int $id, int $season): \Illuminate\Http\JsonResponse
+    {
+        $data = $this->tmdb->getSeasonDetails($id, $season);
+        $episodes = $this->resource->formatSeasonEpisodes($data);
+
+        return response()->json(['episodes' => $episodes]);
+    }
 }

@@ -38,6 +38,53 @@
 
         <!-- Main content en dessous du backdrop -->
         <div class="space-y-12 mb-12">
+
+            <!-- Saisons/Episodes -->
+            <section class="px-8 md:px-16" v-if="item.media_type === 'tv' && item.seasons?.length">
+                <div class="flex flex-col gap-4 mb-6">
+                    <SectionTitle :title="t('seasons')" class="mb-0" />
+                    <select v-model="selectedSeason" @change="loadEpisodes"
+                        class="max-w-40 rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-white focus:border-theme-primary focus:outline-none focus:ring-1 focus:ring-theme-primary">
+                        <option v-for="season in seasonsList" :key="season.season_number" :value="season.season_number">
+                            {{ season.name || (t('season') + ' ' + season.season_number) }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Liste des épisodes -->
+                <Card>
+                    <p v-if="episodesLoading" class="py-8 text-center text-white/60">{{ t('loading') }}</p>
+                    <div v-else-if="!episodes.length" class="py-8 text-center text-white/60">
+                        {{ t('no_episodes') }}
+                    </div>
+                    <div v-else class="space-y-4">
+                        <Link v-for="(ep, index) in episodes" :key="ep.id"
+                            :href="route('watch.tv', { id: item.id, season: ep.season_number, episode: ep.episode_number })"
+                            class="flex gap-4 rounded-lg p-3 transition-colors hover:bg-white/5">
+                            <div class="relative h-20 w-[140px] flex-shrink-0 overflow-hidden rounded-md bg-white/10">
+                                <img v-if="ep.still_path" :src="ep.still_path" :alt="ep.name"
+                                    class="h-full w-full object-cover" loading="lazy" />
+                                <div v-else class="flex h-full items-center justify-center text-white/30">
+                                    <span class="text-2xl font-bold">{{ index + 1 }}</span>
+                                </div>
+                                <div v-if="ep.runtime"
+                                    class="absolute bottom-1 right-1 rounded bg-black/80 px-1.5 py-0.5 text-xs text-white">
+                                    {{ ep.runtime }}
+                                </div>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="font-semibold text-white">
+                                    {{ ep.episode_number }}. {{ ep.name || (t('episode') + ' ' + ep.episode_number) }}
+                                </p>
+                                <p v-if="ep.runtime" class="mt-0.5 text-xs text-white/50">{{ ep.runtime }}</p>
+                                <p v-if="ep.overview" class="mt-1 line-clamp-2 text-sm text-white/70">{{ ep.overview }}
+                                </p>
+                            </div>
+                        </Link>
+                    </div>
+                </Card>
+            </section>
+
             <!-- Details -->
             <section class="px-8 md:px-16">
                 <SectionTitle :title="t('details')" />
@@ -218,7 +265,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import { useTranslation } from '../Composables/useTranslation.js';
 import AppLayout from '../Layouts/AppLayout.vue';
@@ -281,4 +328,37 @@ const watchUrl = computed(() => {
     }
     return route('watch.tv', { id: props.item.id, season: 1, episode: 1 });
 });
+
+// Saisons / épisodes (TV)
+const selectedSeason = ref(1);
+const episodes = ref([]);
+const episodesLoading = ref(false);
+
+const seasonsList = computed(() => {
+    const seasons = props.item.seasons ?? [];
+    return seasons.filter(s => (s.season_number ?? 0) >= 1);
+});
+
+async function loadEpisodes() {
+    if (props.item.media_type !== 'tv' || !props.item.id) return;
+    episodesLoading.value = true;
+    try {
+        const url = route('api.tv.season', { id: props.item.id, season: selectedSeason.value });
+        const res = await fetch(url);
+        const data = await res.json();
+        episodes.value = data.episodes ?? [];
+    } catch {
+        episodes.value = [];
+    } finally {
+        episodesLoading.value = false;
+    }
+}
+
+watch(selectedSeason, loadEpisodes, { immediate: false });
+watch(() => props.item.id, () => {
+    if (props.item.media_type === 'tv' && props.item.id) {
+        selectedSeason.value = 1;
+        loadEpisodes();
+    }
+}, { immediate: true });
 </script>

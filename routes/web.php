@@ -66,6 +66,7 @@ Route::middleware(['auth', 'profile'])->group(function () {
 
     Route::get('/movie/{id}', [DetailController::class, 'movie'])->name('movie.show')->where('id', '[0-9]+');
     Route::get('/tv/{id}', [DetailController::class, 'tv'])->name('tv.show')->where('id', '[0-9]+');
+    Route::get('/api/tv/{id}/season/{season}', [DetailController::class, 'seasonEpisodes'])->name('api.tv.season')->where(['id' => '[0-9]+', 'season' => '[0-9]+']);
     Route::get('/person/{id}', [PersonController::class, 'show'])->name('person.show')->where('id', '[0-9]+');
 
     Route::get('/trending', [TrendingController::class, 'index'])->name('trending.index');
