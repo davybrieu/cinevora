@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./resources/js/*"]
+        },
+        "checkJs": false,
+        "allowJs": true,
+        "skipLibCheck": true
+    },
+    "exclude": ["node_modules", "public"]
+}
