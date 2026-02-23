@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TmdbResource;
+use App\Models\WatchProgress;
 use App\Services\TmdbService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,9 +24,13 @@ class HomeController extends Controller
 
         $categories = $this->getCategories($providerId);
 
+        $profileId = $request->session()->get('profile_id');
+        $keepWatching = $this->getKeepWatchingItems($profileId);
+
         return Inertia::render('Home', [
             'hero' => $hero,
             'categories' => $categories,
+            'keepWatching' => $keepWatching,
             'currentProvider' => $providerId,
             'providers' => $this->tmdb->getPreferedProviders(),
         ]);
@@ -77,14 +82,47 @@ class HomeController extends Controller
                     return null;
                 }
                 $data = $this->tmdb->getByGenre($type, $id, $providerId);
+                $rawItems = $data['results'] ?? [];
+                $items = collect($rawItems)->map(fn($item) => array_merge($item, ['media_type' => $type]))->all();
                 return [
                     'title' => $category['name'] ?? '',
                     'slug' => $category['slug'] ?? '',
-                    'items' => $data['results'] ?? [],
+                    'items' => $items,
                 ];
             })
             ->filter(fn($cat) => is_array($cat) && count($cat['items']) > 0)
             ->values()
             ->all();
+    }
+
+    /**
+     * Get "Keep Watching" items: latest from watch_progress per title, ordered by updated_at.
+     */
+    protected function getKeepWatchingItems(?int $profileId): array
+    {
+        if (! $profileId) {
+            return [];
+        }
+
+        $rows = WatchProgress::where('profile_id', $profileId)
+            ->orderByDesc('updated_at')
+            ->get()
+            ->unique(fn(WatchProgress $r) => $r->item_type . '-' . $r->item_id)
+            ->values();
+
+        $items = [];
+        foreach ($rows->take(20) as $row) {
+            $data = $this->tmdb->getItemSummary($row->item_id, $row->item_type);
+            if (empty($data['id'])) {
+                continue;
+            }
+            $item = $this->resource->formatItem($data, $row->item_type);
+            $item['watch_progress_percentage'] = round($row->progress_percentage, 1);
+            $item['resume_season'] = $row->season;
+            $item['resume_episode'] = $row->episode;
+            $items[] = $item;
+        }
+
+        return $items;
     }
 }

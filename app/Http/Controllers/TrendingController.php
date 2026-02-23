@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TmdbResource;
+use App\Models\WatchProgress;
 use App\Services\TmdbService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,6 +29,9 @@ class TrendingController extends Controller
             ->values()
             ->all();
 
+        $profileId = $request->session()->get('profile_id');
+        $items = WatchProgress::mergeProgressIntoItems($items, $profileId);
+
         return Inertia::render('Trending', [
             'items' => $items,
             'totalResults' => $data['total_results'] ?? 0,
@@ -52,6 +56,9 @@ class TrendingController extends Controller
             ->map(fn($item) => $this->resource->formatItem($item))
             ->values()
             ->all();
+
+        $profileId = $request->session()->get('profile_id');
+        $items = WatchProgress::mergeProgressIntoItems($items, $profileId);
 
         return response()->json([
             'items' => $items,

@@ -7,6 +7,10 @@
             <ProviderFilter :providers="providers" :current-provider="currentProvider" />
         </div>
 
+        <div v-if="keepWatching.length" class="relative z-10 pb-4">
+            <MovieRow :title="t('keep_watching')" :items="keepWatching" />
+        </div>
+
         <div class="relative z-10 space-y-2 pb-20">
             <MovieRow v-for="category in categories" :key="category.slug" :title="category.title" :slug="category.slug"
                 :items="category.items" />
@@ -28,6 +32,7 @@ const { t } = useTranslation();
 const props = defineProps({
     hero: { type: Array, required: true },
     categories: { type: Array, required: true },
+    keepWatching: { type: Array, default: () => [] },
     providers: { type: Array, required: true },
     currentProvider: { type: Number, default: null },
 });

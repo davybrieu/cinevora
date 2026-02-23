@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TmdbResource;
+use App\Models\WatchProgress;
 use App\Models\Watchlist;
 use App\Services\TmdbService;
 use Illuminate\Http\RedirectResponse;
@@ -38,7 +39,9 @@ class WatchlistController extends Controller
             $item['watchlist_id'] = $watchlist->id;
 
             return $item;
-        })->filter()->values();
+        })->filter()->values()->all();
+
+        $items = WatchProgress::mergeProgressIntoItems($items, $profileId);
 
         return Inertia::render('Watchlist', [
             'items' => $items,

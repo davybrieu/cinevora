@@ -32,8 +32,10 @@ class DetailController extends Controller
 
         $data['reviews'] = $this->tmdb->getReviews($id, $type);
 
+        $profileId = request()->session()->get('profile_id');
+
         return Inertia::render('Detail', [
-            'item' => $this->resource->formatDetail($data, $type),
+            'item' => $this->resource->formatDetail($data, $type, $profileId),
         ]);
     }
 

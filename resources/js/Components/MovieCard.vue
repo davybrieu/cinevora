@@ -13,6 +13,15 @@
                 </span>
             </div>
 
+            <!-- Watch progress bar (Netflix style) -->
+            <div
+                v-if="watchProgressPercent != null && watchProgressPercent > 0"
+                class="absolute bottom-0 left-0 right-0 z-[2] h-1 bg-white/20 rounded-b-lg overflow-hidden">
+                <div
+                    class="h-full rounded-l bg-theme-accent transition-all duration-300"
+                    :style="{ width: Math.min(100, watchProgressPercent) + '%' }" />
+            </div>
+
             <!-- Hover overlay: play button -->
             <div
                 class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -91,6 +100,11 @@ const props = defineProps({
 });
 
 const showDetail = ref(false);
+
+const watchProgressPercent = computed(() => {
+    const p = props.item.watch_progress_percentage;
+    return p != null && Number(p) >= 0 ? Number(p) : null;
+});
 
 const detailUrl = computed(() => {
     const routeName = props.item.media_type === 'tv' ? 'tv.show' : 'movie.show';

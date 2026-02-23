@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\WatchProgress;
 use App\Services\TmdbService;
 use Illuminate\Support\Facades\App;
 use Carbon\Carbon;
@@ -89,7 +90,7 @@ class TmdbResource
         ];
     }
 
-    public function formatDetail(array $data, string $mediaType): array
+    public function formatDetail(array $data, string $mediaType, ?int $profileId = null): array
     {
         $region = App::getLocale() === 'en' ? 'US' : 'FR';
         $providers = $data['watch/providers']['results'][$region] ?? [];
@@ -211,6 +212,18 @@ class TmdbResource
                 ->all();
         } else {
             $result['seasons'] = [];
+        }
+
+        if ($profileId !== null && ! empty($data['id'] ?? null)) {
+            $rows = WatchProgress::where('profile_id', $profileId)
+                ->where('item_id', (int) $data['id'])
+                ->where('item_type', $mediaType)
+                ->get();
+            $result['watch_progress_percentage'] = $rows->isNotEmpty()
+                ? round($rows->max('progress_percentage'), 1)
+                : null;
+        } else {
+            $result['watch_progress_percentage'] = null;
         }
 
         return $result;

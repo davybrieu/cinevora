@@ -32,7 +32,8 @@ class WatchController extends Controller
 
         abort_if(empty($data['id']), 404);
 
-        $item = $this->resource->formatDetail($data, $type);
+        $profileId = request()->session()->get('profile_id');
+        $item = $this->resource->formatDetail($data, $type, $profileId);
 
         if ($type === 'movie') {
             $iframeSrc = "https://player.videasy.net/movie/{$id}?overlay=true";
