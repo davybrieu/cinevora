@@ -30,5 +30,5 @@ createServer(
                 color: "#193cb8",
             },
         }),
-    Number(import.meta.env.VITE_INERTIA_SSR_PORT) || 13721,
+    Number(import.meta.env.VITE_INERTIA_SSR_PORT) || 13726,
 );
