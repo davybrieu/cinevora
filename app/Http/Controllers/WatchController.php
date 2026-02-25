@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TmdbResource;
+use App\Models\WatchProgress;
 use App\Services\TmdbService;
 use App\Services\TorrentioService;
 use Inertia\Inertia;
@@ -35,10 +36,29 @@ class WatchController extends Controller
         $profileId = request()->session()->get('profile_id');
         $item = $this->resource->formatDetail($data, $type, $profileId);
 
+        // Chercher dans WatchProgress si on a une progression
+        $progress = 0;
+        if ($profileId) {
+            $progressQuery = WatchProgress::where('profile_id', $profileId)
+                ->where('item_id', $id)
+                ->where('item_type', $type);
+
+            if ($type === 'tv' && $season !== null && $episode !== null) {
+                $progressQuery = $progressQuery
+                    ->where('season', $season)
+                    ->where('episode', $episode);
+            }
+
+            $progressRow = $progressQuery->orderByDesc('updated_at')->first();
+            if ($progressRow && $progressRow->progress > 0) {
+                $progress = $progressRow->progress;
+            }
+        }
+
         if ($type === 'movie') {
-            $iframeSrc = "https://player.videasy.net/movie/{$id}?overlay=true";
+            $iframeSrc = "https://player.videasy.net/movie/{$id}?overlay=true&progress={$progress}";
         } else if ($type === 'tv') {
-            $iframeSrc = "https://player.videasy.net/tv/{$id}/{$season}/{$episode}?overlay=true&nextEpisode=false&episodeSelector=false";
+            $iframeSrc = "https://player.videasy.net/tv/{$id}/{$season}/{$episode}?overlay=true&nextEpisode=false&episodeSelector=false&progress={$progress}";
         }
 
         return Inertia::render('Watch', [

@@ -131,7 +131,6 @@
     "password": "Password",
     "password_confirmation": "Confirm Password",
     "name": "Name",
-    "remember_me": "Remember me",
     "no_account": "Don't have an account?",
     "already_have_account": "Already have an account?",
     "auth_failed": "These credentials do not match our records.",

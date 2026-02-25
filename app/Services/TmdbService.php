@@ -360,12 +360,25 @@ class TmdbService
 
     public function getPreferedProviders(): array
     {
-        $preferedProvidersIds = [8, 337, 119, 350, 381, 384, 15, 283, 173];
-        $preferedProvidersIds = array_flip($preferedProvidersIds);
-        return array_values(array_filter(
+        $preferedProvidersIds = [8, 119, 337, 350, 381, 15, 283];
+        $preferedProvidersIdsFlip = array_flip($preferedProvidersIds);
+
+        $providers = array_values(array_filter(
             $this->getProviders(),
-            fn($provider) => isset($preferedProvidersIds[$provider['id']])
+            fn($provider) => isset($preferedProvidersIdsFlip[$provider['id']])
         ));
+
+        // Sort according to $preferedProvidersIds order
+        usort($providers, function ($a, $b) use ($preferedProvidersIdsFlip) {
+            return $preferedProvidersIdsFlip[$a['id']] <=> $preferedProvidersIdsFlip[$b['id']];
+        });
+
+        foreach ($providers as &$provider) {
+            $provider['hq_logo_path'] = asset('images/providers/' . $provider['id'] . '.svg');
+        }
+        unset($provider);
+
+        return $providers;
     }
 
     public function getMovieCategories(): array

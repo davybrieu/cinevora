@@ -1,6 +1,9 @@
 <template>
     <div>
-        <label v-if="label" :for="id" class="mb-1.5 block text-sm text-white/70">{{ label }}</label>
+        <div v-if="label || $slots.labelSuffix" class="mb-1.5 flex items-center justify-between gap-2">
+            <label v-if="label" :for="id" class="text-sm text-white/70">{{ label }}</label>
+            <slot name="labelSuffix" />
+        </div>
         <input :id="id" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" :type="type"
             :placeholder="placeholder" :required="required" :autofocus="autofocus" :maxlength="maxlength"
             class="w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/30 outline-none transition focus:border-theme-accent focus:ring-1 focus:ring-theme-accent" />

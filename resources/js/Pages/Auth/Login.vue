@@ -5,14 +5,14 @@
                 :placeholder="t('placeholder_email')" :error="form.errors.email" required autofocus />
 
             <InputGroup id="password" v-model="form.password" :label="t('password')" type="password"
-                :placeholder="t('placeholder_password')" required />
-
-            <div class="flex items-center justify-between">
-                <InputCheckbox id="remember" v-model="form.remember" :label="t('remember_me')" />
-                <Link :href="route('password.request')" class="text-sm text-white/60 hover:text-white hover:underline">
-                    {{ t('forgot_password_link') }}
-                </Link>
-            </div>
+                :placeholder="t('placeholder_password')" :error="form.errors.password" required>
+                <template #labelSuffix>
+                    <Link :href="route('password.request')"
+                        class="text-sm text-theme-accent hover:text-theme-accent-hover hover:underline">
+                        {{ t('forgot_password_link') }}
+                    </Link>
+                </template>
+            </InputGroup>
 
             <Button type="submit" variant="primary" size="md" full :processing="form.processing">
                 {{ t('sign_in') }}
@@ -36,7 +36,7 @@ import Button from '../../Components/Button.vue';
 
 const { t } = useTranslation();
 
-const form = useForm({ email: '', password: '', remember: false });
+const form = useForm({ email: '', password: '' });
 
 function submit() {
     form.post(route('login'), { onFinish: () => form.reset('password') });
