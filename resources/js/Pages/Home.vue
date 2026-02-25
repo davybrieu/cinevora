@@ -2,13 +2,13 @@
     <AppLayout :title="t('home_title')">
         <HeroSlider v-if="hero.length" :items="hero" />
 
+        <div v-if="keepWatching.length" class="relative z-10">
+            <MovieRow :title="t('keep_watching')" :items="keepWatching" />
+        </div>
+
         <div class="relative z-10 mt-14 pb-8">
             <SectionTitle :title="t('streaming_providers')" class="px-8 md:px-16" />
             <ProviderFilter :providers="providers" :current-provider="currentProvider" />
-        </div>
-
-        <div v-if="keepWatching.length" class="relative z-10 pb-4">
-            <MovieRow :title="t('keep_watching')" :items="keepWatching" />
         </div>
 
         <div class="relative z-10 space-y-2 pb-20">
