@@ -13,7 +13,7 @@
                                 </div>
                                 <div>
                                     <h2 class="text-base font-semibold tracking-tight text-white">{{ t('browse_filters')
-                                        }}</h2>
+                                    }}</h2>
                                     <p class="text-xs text-white/45 mt-0.5">{{ t('catalog') }}</p>
                                 </div>
                             </div>
@@ -313,7 +313,7 @@ function clearAllFilters() {
         vote_count_min: 0,
         sort: 'popularity_desc',
     };
-    router.get(route('browse.index'), {}, { preserveState: false });
+    router.get(route('browse.index'), {}, { preserveState: false, preserveScroll: true });
 }
 
 async function loadMore() {
