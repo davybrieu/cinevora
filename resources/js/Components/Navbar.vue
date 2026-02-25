@@ -8,9 +8,9 @@
                     <img src="/images/logo.svg" alt="logo" class="h-auto max-w-34">
                 </Link>
 
-                <nav v-if="profile" class="hidden items-center gap-1 md:flex">
+                <nav v-if="profile" class="hidden items-center gap-5 md:flex">
                     <Link v-for="tab in navTabs" :key="tab.route" :href="route(tab.route)"
-                        class="rounded-md px-4 py-2 text-sm font-medium transition" :class="isActive(tab.route)
+                        class="rounded-md px-4 py-2 text-md font-medium transition" :class="isActive(tab.route)
                             ? 'bg-white/10 text-white'
                             : 'text-white/60 hover:bg-white/5 hover:text-white'">
                         {{ tab.label }}
