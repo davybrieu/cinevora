@@ -47,7 +47,7 @@
                                 <span class="text-sm font-medium text-white/80">{{ group.date_label }}</span>
                             </div>
                             <div class="space-y-2">
-                                <div v-for="entry in group.entries" :key="entry.id"
+                                <Card v-for="entry in group.entries" :key="entry.id"
                                     class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/[0.03] p-4">
                                     <div class="min-w-0 flex-1">
                                         <p class="font-medium text-white">{{ entry.title }}</p>
@@ -62,14 +62,12 @@
                                         <Button :href="entry.detail_url" variant="secondary" size="sm">
                                             {{ t('view_details') }}
                                         </Button>
-                                        <button type="button"
-                                            class="rounded-lg p-2 text-white/50 transition hover:bg-white/10 hover:text-white"
-                                            :disabled="deletingId === entry.id" :aria-label="t('delete')"
+                                        <Button variant="danger" size="sm" :processing="deletingId === entry.id"
                                             @click="deleteEntry(entry.id)">
                                             <TrashIcon class="h-5 w-5" />
-                                        </button>
+                                        </Button>
                                     </div>
-                                </div>
+                                </Card>
                             </div>
                         </div>
                     </div>
