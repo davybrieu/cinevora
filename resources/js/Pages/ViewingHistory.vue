@@ -59,12 +59,12 @@
                                         </p>
                                     </div>
                                     <div class="flex shrink-0 items-center gap-2">
-                                        <Button :href="entry.detail_url" variant="secondary" size="sm">
+                                        <Button :href="entry.detail_url" variant="secondary" size="sm" class="h-9">
                                             {{ t('view_details') }}
                                         </Button>
-                                        <Button variant="danger" size="sm" :processing="deletingId === entry.id"
-                                            @click="deleteEntry(entry.id)">
-                                            <TrashIcon class="h-5 w-5" />
+                                        <Button variant="danger" size="sm" class="h-9"
+                                            :processing="deletingId === entry.id" @click="deleteEntry(entry.id)">
+                                            <TrashIcon class="h-4 w-4" />
                                         </Button>
                                     </div>
                                 </Card>
