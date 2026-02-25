@@ -1,13 +1,8 @@
 <template>
-    <AppLayout :title="t('viewing_history_title')">
-        <div class="px-8 pb-20 pt-24 md:px-16">
-            <!-- Header -->
-            <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div>
-                    <h1 class="text-2xl font-bold text-white md:text-3xl">{{ t('viewing_history_title') }}</h1>
-                    <p class="mt-1 text-sm text-white/60">{{ t('viewing_history_subtitle') }}</p>
-                </div>
-                <Button v-if="hasHistory" variant="primary" size="md" :disabled="clearing" @click="clearAllHistory">
+    <AppLayout :title="t('viewing_history_title')" :description="t('page_header_viewing_history_desc')">
+        <div class="px-8 pb-20 pt-10 md:px-16">
+            <div v-if="hasHistory" class="mb-6 flex justify-end">
+                <Button variant="primary" size="md" :disabled="clearing" @click="clearAllHistory">
                     {{ clearing ? t('loading') : t('viewing_history_clear_all') }}
                 </Button>
             </div>

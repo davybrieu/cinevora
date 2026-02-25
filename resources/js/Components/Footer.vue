@@ -2,7 +2,7 @@
     <footer class="border-t border-white/10 text-white/60 leading-relaxed">
         <div class="px-8 md:px-16 py-8 pb-5">
             <div class="mb-8 flex flex-col">
-                <img src="/images/logo.svg" alt="Logo" class="w-30 mb-6">
+                <img src="/images/logo.svg" alt="Logo" class="h-auto max-w-50 mb-4 -ml-2">
                 <div class="max-w-3xl">
                     <p>{{ t('footer_disclaimer_hosting', { name: page.props.name }) }}</p>
                     <p>{{ t('footer_disclaimer_legal') }}</p>

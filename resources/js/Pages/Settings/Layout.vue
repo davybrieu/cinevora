@@ -1,9 +1,7 @@
 <template>
-    <AppLayout :title="t('settings')">
-        <div class="min-h-screen pt-24 pb-12">
+    <AppLayout :title="t('settings')" :description="t('page_header_settings_desc')">
+        <div class="min-h-screen pt-10 pb-12">
             <div class="px-8 md:px-16">
-                <h1 class="mb-8 text-3xl font-bold text-white">{{ t('settings') }}</h1>
-
                 <div class="flex flex-col gap-8 lg:flex-row">
                     <!-- Tabs navigation (left side) -->
                     <nav class="w-full shrink-0 lg:w-64">

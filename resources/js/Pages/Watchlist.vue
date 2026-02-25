@@ -1,8 +1,6 @@
 <template>
-    <AppLayout :title="t('my_watchlist')">
-        <div class="px-8 pb-20 pt-24 md:px-16">
-            <h1 class="mb-8 text-2xl font-bold text-white md:text-3xl">{{ t('my_watchlist') }}</h1>
-
+    <AppLayout :title="t('my_watchlist')" :description="t('page_header_watchlist_desc')">
+        <div class="px-8 pb-20 pt-10 md:px-16">
             <div
                 v-if="items.length"
                 class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7"

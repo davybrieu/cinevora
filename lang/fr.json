@@ -263,5 +263,13 @@
     "viewing_history_minute": "minute|minutes",
     "viewing_history_second": "seconde|secondes",
     "viewing_history_unknown_movie": "Film inconnu",
-    "viewing_history_unknown_series": "Série inconnue"
+    "viewing_history_unknown_series": "Série inconnue",
+    "page_header_browse_desc": "Parcours le catalogue et découvre des films et séries selon tes envies.",
+    "page_header_trending_desc": "Découvre ce qui cartonne en ce moment au cinéma et en séries.",
+    "page_header_watchlist_desc": "Ta liste de films et séries à regarder plus tard.",
+    "page_header_viewing_history_desc": "Retrouve tout ce que tu as regardé et tes stats de visionnage.",
+    "page_header_settings_desc": "Gère ton profil, ton compte et tes préférences.",
+    "page_header_privacy_desc": "Comment nous collectons, utilisons et protégeons tes données personnelles.",
+    "page_header_terms_desc": "Conditions d'utilisation du service et règles à respecter.",
+    "page_header_dmca_desc": "Procédure pour signaler une violation de droits d'auteur."
 }

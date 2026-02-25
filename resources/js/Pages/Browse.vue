@@ -1,8 +1,6 @@
 <template>
-    <AppLayout :title="t('catalog')">
-        <div class="min-h-screen px-8 pb-20 pt-24 md:px-16">
-            <h1 class="mb-6 text-2xl font-bold text-white">{{ t('catalog') }}</h1>
-
+    <AppLayout :title="t('catalog')" :description="t('page_header_browse_desc')">
+        <div class="min-h-screen px-8 pb-20 pt-10 md:px-16">
             <div class="flex flex-col gap-8 lg:flex-row">
                 <aside class="browse-aside w-full shrink-0 lg:w-80">
                     <div class="browse-aside-panel rounded-xl border border-white/10 overflow-hidden">
@@ -15,7 +13,7 @@
                                 </div>
                                 <div>
                                     <h2 class="text-base font-semibold tracking-tight text-white">{{ t('browse_filters')
-                                    }}</h2>
+                                        }}</h2>
                                     <p class="text-xs text-white/45 mt-0.5">{{ t('catalog') }}</p>
                                 </div>
                             </div>
@@ -34,12 +32,12 @@
                             <!-- Search -->
                             <FilterSection v-model:open="openSections.search" :title="t('browse_search')" icon="search">
                                 <input v-model="form.query" type="text" :placeholder="t('search_placeholder')"
-                                    class="browse-input" @input="scheduleApply" />
+                                    class="w-full" @input="scheduleApply" />
                             </FilterSection>
 
                             <!-- Type -->
                             <FilterSection v-model:open="openSections.type" :title="t('browse_type')" icon="type">
-                                <select v-model="form.type" class="browse-input" @change="scheduleApply">
+                                <select v-model="form.type" class="w-full" @change="scheduleApply">
                                     <option value="all">{{ t('all') }}</option>
                                     <option value="movie">{{ t('movie') }}</option>
                                     <option value="tv">{{ t('tv_series') }}</option>
@@ -49,7 +47,7 @@
                             <!-- Watch Providers -->
                             <FilterSection v-model:open="openSections.providers" :title="t('streaming_providers')"
                                 icon="tv">
-                                <select v-model="form.provider" class="browse-input" @change="scheduleApply">
+                                <select v-model="form.provider" class="w-full" @change="scheduleApply">
                                     <option value="">{{ t('browse_select_providers') }}</option>
                                     <option v-for="p in providers.filter(pr => pr.id)" :key="p.id" :value="p.id">
                                         {{ p.name }}
@@ -76,16 +74,15 @@
                             <FilterSection v-model:open="openSections.date" :title="t('browse_release_date')"
                                 icon="calendar">
                                 <div class="space-y-2">
-                                    <input v-model="form.date_from" type="date" class="browse-input"
+                                    <input v-model="form.date_from" type="date" class="w-full"
                                         @change="scheduleApply" />
-                                    <input v-model="form.date_to" type="date" class="browse-input"
-                                        @change="scheduleApply" />
+                                    <input v-model="form.date_to" type="date" class="w-full" @change="scheduleApply" />
                                 </div>
                             </FilterSection>
 
                             <!-- Language -->
                             <FilterSection v-model:open="openSections.language" :title="t('language')" icon="language">
-                                <select v-model="form.language" class="browse-input" @change="scheduleApply">
+                                <select v-model="form.language" class="w-full" @change="scheduleApply">
                                     <option value="">{{ t('browse_select_language') }}</option>
                                     <option v-for="lang in languages" :key="lang.code || lang[0] || lang"
                                         :value="lang.code || lang[0] || lang">
@@ -139,8 +136,7 @@
                             {{ t('browse_showing') }} {{ totalLoaded }} {{ t('browse_of') }} {{ totalResultsLabel }}
                         </p>
                         <div class="w-full flex justify-center sm:justify-end sm:w-auto sm:flex-1 min-w-[180px]">
-                            <select v-model="form.sort" class="browse-input sm:max-w-xs sm:w-[220px]"
-                                @change="scheduleApply">
+                            <select v-model="form.sort" class="w-full" @change="scheduleApply">
                                 <option v-for="(labelKey, value) in sortOptions" :key="value" :value="value">
                                     {{ t(labelKey) }}
                                 </option>

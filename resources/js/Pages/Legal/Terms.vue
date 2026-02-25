@@ -1,9 +1,7 @@
 <template>
-    <AppLayout :title="`${t('terms_of_service')} — theme`">
-        <div class="mx-auto max-w-3xl px-8 pb-20 pt-28 md:px-16">
+    <AppLayout :title="t('terms_of_service')" :description="t('page_header_terms_desc')">
+        <div class="mx-auto max-w-3xl px-8 pb-20 pt-10 md:px-16">
             <Card>
-                <h1 class="mb-8 text-3xl font-bold text-white">{{ t('terms_of_service') }}</h1>
-
                 <div class="space-y-6 text-sm leading-relaxed text-white/60">
                     <section v-for="(key, i) in ['acceptance', 'service', 'content', 'liability', 'changes']"
                         :key="key">

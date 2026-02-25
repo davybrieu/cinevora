@@ -5,7 +5,7 @@
         <div class="flex items-center justify-between px-8 py-4 md:px-16">
             <div class="flex items-center gap-8">
                 <Link :href="route('landing')" class="shrink-0">
-                    <img src="/images/logo.svg" alt="logo" class="w-24">
+                    <img src="/images/logo.svg" alt="logo" class="h-auto max-w-34">
                 </Link>
 
                 <nav v-if="profile" class="hidden items-center gap-1 md:flex">
