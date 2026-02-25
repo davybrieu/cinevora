@@ -12,7 +12,7 @@
         </div>
 
         <div class="relative z-10 space-y-2 pb-20">
-            <MovieRow v-for="category in categories" :key="category.slug" :title="category.title" :slug="category.slug"
+            <MovieRow v-for="category in categories" :key="category.slug" :title="category.title"
                 :items="category.items" />
         </div>
     </AppLayout>

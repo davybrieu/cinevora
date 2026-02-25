@@ -1,16 +1,12 @@
 <template>
     <div class="grid grid-cols-2 gap-2 px-8 md:grid-cols-4 md:gap-4 md:px-16 lg:grid-cols-7">
-        <Link
-            v-for="provider in providers"
-            :key="provider.id"
-            :href="provider.id && currentProvider === provider.id
-                ? route('home')
-                : (provider.id ? route('home', { provider: provider.id }) : route('home'))"
+        <Link v-for="provider in providers" :key="provider.id" :href="provider.id && currentProvider === provider.id
+            ? route('home')
+            : (provider.id ? route('home', { provider: provider.id }) : route('home'))"
             class="flex items-center justify-center gap-2 rounded-md border px-4 py-2 transition-all duration-200 group"
             :class="currentProvider === provider.id
                 ? 'border-red-500 bg-red-500 text-black'
-                : 'border-white/10 bg-white/5 text-white/80 hover:border-white/25 hover:bg-white/10 hover:text-white'"
-        >
+                : 'border-white/10 bg-white/5 text-white/80 hover:border-white/25 hover:bg-white/10 hover:text-white'">
             <template v-if="provider.id === null">
                 <span class="text-white/80">{{ provider.name }}</span>
             </template>

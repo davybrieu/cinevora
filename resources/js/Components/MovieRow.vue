@@ -1,6 +1,6 @@
 <template>
     <div class="movie-row group/row relative py-4">
-        <SectionTitle :title="title" :count="count" :slug="slug" class="px-8 md:px-16">
+        <SectionTitle :title="title" :count="count" class="px-8 md:px-16">
             <template #action v-if="slug">
                 <Link :href="route('browse.show', { category: slug })"
                     class="flex items-center gap-1 text-sm text-theme-text-muted transition-colors hover:text-white">

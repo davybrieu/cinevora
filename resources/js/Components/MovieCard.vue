@@ -4,21 +4,25 @@
             :style="cardWidth ? { width: cardWidth + 'px' } : {}" @click="showDetail = true">
             <PosterImage :src="item.poster_path" :alt="item.title" rounded="rounded-lg" class="aspect-[3/5] w-full" />
 
-            <!-- Rating badge (always visible) -->
-            <div class="absolute bottom-2 right-2 z-[2]">
+            <!-- Top badges bar: Harmonize badge height -->
+            <div class="absolute left-2 right-2 top-2 z-[2] flex flex-row items-start justify-between pointer-events-none">
+                <!-- Type badge (top left) -->
                 <span
-                    class="flex items-center gap-0.5 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-sm">
+                    class="min-h-[24px] flex items-center rounded-md bg-black/70 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
+                    {{ item.media_type === 'tv' ? t('series') : t('movie') }}
+                </span>
+                <!-- Rating badge (top right) -->
+                <span
+                    class="min-h-[24px] flex items-center gap-0.5 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-sm">
                     <StarIcon class="h-2.5 w-2.5 text-yellow-400" />
                     {{ Number(item.vote_average).toFixed(1) }}
                 </span>
             </div>
 
             <!-- Watch progress bar (Netflix style) -->
-            <div
-                v-if="watchProgressPercent != null && watchProgressPercent > 0"
-                class="absolute bottom-0 left-0 right-0 z-[2] h-1 bg-white/20 rounded-b-lg overflow-hidden">
-                <div
-                    class="h-full rounded-l bg-theme-accent transition-all duration-300"
+            <div v-if="watchProgressPercent != null && watchProgressPercent > 0"
+                class="absolute bottom-2 left-2 right-2 z-[2] h-1 overflow-hidden rounded-b-lg bg-white/20">
+                <div class="h-full rounded-l-md bg-theme-accent transition-all duration-300"
                     :style="{ width: Math.min(100, watchProgressPercent) + '%' }" />
             </div>
 
@@ -64,12 +68,8 @@
                                             <InformationCircleIcon class="h-4 w-4" />
                                             {{ t('view_details') }}
                                         </Button>
-                                        <WatchlistButton 
-                                            :item-id="item.id" 
-                                            :item-type="item.media_type"
-                                            size="md"
-                                            button-class="rounded-full"
-                                        />
+                                        <WatchlistButton :item-id="item.id" :item-type="item.media_type" size="md"
+                                            button-class="rounded-full" />
                                     </div>
                                 </MovieInfo>
                             </div>

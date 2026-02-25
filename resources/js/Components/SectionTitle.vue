@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center justify-between" :class="slug || $slots.action ? 'mb-3' : 'mb-5'">
+    <div class="flex items-center justify-between" :class="$slots.action ? 'mb-3' : 'mb-5'">
         <h2 :class="sizeClass">
             {{ title }}
             <span v-if="count !== null" class="text-base font-normal text-white/30">({{ count }})</span>
@@ -19,7 +19,6 @@ const { t } = useTranslation();
 const props = defineProps({
     title: { type: String, required: true },
     count: { type: Number, default: null },
-    slug: { type: String, default: null },
     size: { type: String, default: 'xl' },
 });
 
