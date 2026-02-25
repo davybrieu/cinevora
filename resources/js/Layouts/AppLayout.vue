@@ -1,4 +1,5 @@
 <template>
+
     <Head :title="title" />
     <div class="min-h-screen bg-theme-dark">
         <AppLoader />
@@ -6,7 +7,7 @@
         <Toast />
         <PageHeader v-if="description" :title="title" :description="description" />
         <slot />
-        <Footer />
+        <Footer v-if="footer" />
     </div>
 </template>
 
@@ -21,5 +22,6 @@ import Toast from '@/Components/Toast.vue';
 defineProps({
     title: { type: String, required: true },
     description: { type: String, default: '' },
+    footer: { type: Boolean, default: true },
 });
 </script>

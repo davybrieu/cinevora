@@ -1,5 +1,5 @@
 <template>
-    <AppLayout :title="t('landing_title')">
+    <AuthLayout :title="t('landing_title')">
         <div class="relative min-h-screen bg-theme-dark flex flex-col">
 
             <!-- Hero -->
@@ -19,11 +19,9 @@
                     </Button>
                 </div>
             </div>
-
-            <AuthBackground />
         </div>
 
-    </AppLayout>
+    </AuthLayout>
 </template>
 
 <script setup>
@@ -32,5 +30,6 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import Button from '@/Components/Button.vue';
 import AuthBackground from '@/Components/AuthBackground.vue';
 import { usePage } from '@inertiajs/vue3';
+import AuthLayout from '@/Layouts/AuthLayout.vue';
 const { t } = useTranslation();
 </script>
