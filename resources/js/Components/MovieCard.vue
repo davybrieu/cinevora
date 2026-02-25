@@ -5,15 +5,16 @@
             <PosterImage :src="item.poster_path" :alt="item.title" rounded="rounded-lg" class="aspect-[3/5] w-full" />
 
             <!-- Top badges bar: Harmonize badge height -->
-            <div class="absolute left-2 right-2 top-2 z-[2] flex flex-row items-start justify-between pointer-events-none">
+            <div
+                class="absolute left-2 right-2 top-2 z-[2] flex flex-row items-start justify-between pointer-events-none">
                 <!-- Type badge (top left) -->
                 <span
-                    class="min-h-[24px] flex items-center rounded-md bg-black/70 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
+                    class="min-h-[24px] flex items-center rounded-md bg-black/70 px-2 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
                     {{ item.media_type === 'tv' ? t('series') : t('movie') }}
                 </span>
                 <!-- Rating badge (top right) -->
                 <span
-                    class="min-h-[24px] flex items-center gap-0.5 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-sm">
+                    class="min-h-[24px] flex items-center gap-1 rounded-md bg-black/70 px-1.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
                     <StarIcon class="h-2.5 w-2.5 text-yellow-400" />
                     {{ Number(item.vote_average).toFixed(1) }}
                 </span>
