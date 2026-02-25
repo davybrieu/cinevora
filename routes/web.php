@@ -13,6 +13,7 @@ use App\Http\Controllers\TrendingController;
 use App\Http\Controllers\WatchController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\WatchProgressController;
+use App\Http\Controllers\ViewingHistoryController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\BrowseController;
 use Illuminate\Support\Facades\Route;
@@ -81,4 +82,8 @@ Route::middleware(['auth', 'profile'])->group(function () {
     Route::get('/watch/movie/{id}', [WatchController::class, 'movie'])->name('watch.movie')->where('id', '[0-9]+');
     Route::get('/watch/tv/{id}-{season}-{episode}', [WatchController::class, 'tv'])->name('watch.tv')->where(['id' => '[0-9]+', 'season' => '[0-9]+', 'episode' => '[0-9]+']);
     Route::post('/api/watch-progress', [WatchProgressController::class, 'store'])->name('watch.progress.store');
+
+    Route::get('/viewing-history', [ViewingHistoryController::class, 'index'])->name('viewing_history.index');
+    Route::delete('/viewing-history', [ViewingHistoryController::class, 'destroyAll'])->name('viewing_history.destroy_all');
+    Route::delete('/viewing-history/{id}', [ViewingHistoryController::class, 'destroy'])->name('viewing_history.destroy')->where('id', '[0-9]+');
 });

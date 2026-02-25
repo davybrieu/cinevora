@@ -47,6 +47,12 @@
                             <HeartIcon class="h-4 w-4" />
                             {{ t('my_watchlist') }}
                         </Link>
+                        <Link :href="route('viewing_history.index')"
+                            class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
+                            @click="close">
+                            <ChartBarIcon class="h-4 w-4" />
+                            {{ t('viewing_history_title') }}
+                        </Link>
                         <button type="button"
                             class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-white/70 transition hover:bg-white/10 hover:text-white cursor-pointer"
                             @click="onChangeProfile(close)">
@@ -84,7 +90,7 @@ import SearchBar from './SearchBar.vue';
 import LanguageSwitcher from './LanguageSwitcher.vue';
 import Dropdown from './Dropdown.vue';
 import Button from '@/Components/Button.vue';
-import { UserGroupIcon, ArrowRightStartOnRectangleIcon, HeartIcon, Cog6ToothIcon } from '@heroicons/vue/24/outline';
+import { UserGroupIcon, ArrowRightStartOnRectangleIcon, HeartIcon, Cog6ToothIcon, ChartBarIcon } from '@heroicons/vue/24/outline';
 
 const page = usePage();
 const { t } = useTranslation();

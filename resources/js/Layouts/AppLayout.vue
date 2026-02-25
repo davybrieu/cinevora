@@ -1,7 +1,7 @@
 <template>
-
     <Head :title="title" />
     <div class="min-h-screen bg-theme-dark">
+        <AppLoader />
         <Navbar />
         <Toast />
         <slot />
@@ -10,6 +10,7 @@
 </template>
 
 <script setup>
+import AppLoader from '@/Components/AppLoader.vue';
 import Navbar from '@/Components/Navbar.vue';
 import Footer from '@/Components/Footer.vue';
 import { Head } from '@inertiajs/vue3';
