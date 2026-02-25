@@ -21,7 +21,8 @@
                         <div class="mt-6 flex flex-wrap gap-3">
                             <Button :href="watchUrl" variant="primary" size="md">
                                 <PlayIcon class="h-5 w-5" />
-                                {{ t('watch') }}
+                                <template v-if="item.watch_progress_percentage">{{ t('continue') }}</template>
+                                <template v-else>{{ t('watch') }}</template>
                             </Button>
                             <Button variant="secondary" size="md" :disabled="!item.videos.length" @click="playTrailer">
                                 <FilmIcon class="h-5 w-5" />
@@ -316,18 +317,20 @@ const crewByJob = computed(() => {
 
 const videoGalleryRef = ref(null);
 
+const watchUrl = computed(() => {
+    if (props.item.media_type === 'movie') {
+        return route('watch.movie', { id: props.item.id });
+    }
+    const season = props.item.resume_season ?? 1;
+    const episode = props.item.resume_episode ?? 1;
+    return route('watch.tv', { id: props.item.id, season, episode });
+});
+
 function playTrailer() {
     const trailerIdx = props.item.videos.findIndex(v => v.type === 'Trailer');
     const idx = trailerIdx >= 0 ? trailerIdx : 0;
     videoGalleryRef.value?.openVideo(idx);
 }
-
-const watchUrl = computed(() => {
-    if (props.item.media_type === 'movie') {
-        return route('watch.movie', { id: props.item.id });
-    }
-    return route('watch.tv', { id: props.item.id, season: 1, episode: 1 });
-});
 
 // Saisons / épisodes (TV)
 const selectedSeason = ref(1);

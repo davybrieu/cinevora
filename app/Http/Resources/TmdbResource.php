@@ -218,12 +218,28 @@ class TmdbResource
             $rows = WatchProgress::where('profile_id', $profileId)
                 ->where('item_id', (int) $data['id'])
                 ->where('item_type', $mediaType)
+                ->orderByDesc('updated_at')
                 ->get();
-            $result['watch_progress_percentage'] = $rows->isNotEmpty()
-                ? round($rows->max('progress_percentage'), 1)
-                : null;
+            if ($rows->isNotEmpty()) {
+                $result['watch_progress_percentage'] = round($rows->max('progress_percentage'), 1);
+                if ($mediaType === 'tv') {
+                    $last = $rows->first();
+                    $result['resume_season'] = $last->season;
+                    $result['resume_episode'] = $last->episode;
+                }
+            } else {
+                $result['watch_progress_percentage'] = null;
+                if ($mediaType === 'tv') {
+                    $result['resume_season'] = 1;
+                    $result['resume_episode'] = 1;
+                }
+            }
         } else {
             $result['watch_progress_percentage'] = null;
+            if ($mediaType === 'tv') {
+                $result['resume_season'] = 1;
+                $result['resume_episode'] = 1;
+            }
         }
 
         return $result;
