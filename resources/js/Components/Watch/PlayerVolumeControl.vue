@@ -8,9 +8,9 @@
         <div class="ml-2 mr-2 w-24 h-8 flex items-center transition-all duration-200">
             <div class="relative h-1 w-full rounded-full bg-white/20 cursor-pointer" ref="trackRef"
                 @pointerdown="handlePointerDown" @contextmenu.prevent>
-                <div class="absolute left-0 top-0 h-full rounded-full bg-emerald-500"
+                <div class="absolute left-0 top-0 h-full rounded-full bg-theme-accent"
                     :style="{ width: `${percent}%` }" />
-                <div class="absolute top-1/2 h-2.5 w-2.5 rounded-full bg-emerald-400 -translate-y-1/2 -translate-x-1/2"
+                <div class="absolute top-1/2 h-2.5 w-2.5 rounded-full bg-theme-accent -translate-y-1/2 -translate-x-1/2"
                     :style="{ left: `${percent}%` }" />
             </div>
         </div>

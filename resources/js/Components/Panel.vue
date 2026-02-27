@@ -2,8 +2,8 @@
     <div>
         <Transition name="panel">
             <div v-if="modelValue"
-                class="absolute inset-y-0 right-0 z-500 w-full max-w-md flex flex-col bg-black/95 border-l border-emerald-500/10 backdrop-blur-xl shadow-2xl">
-                <div class="flex items-center justify-between px-5 py-4 border-b border-emerald-500/10">
+                class="absolute inset-y-0 right-0 z-500 w-full max-w-md flex flex-col bg-black/95 border-l border-theme-accent/10 backdrop-blur-xl shadow-2xl">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-theme-accent/10">
                     <h2 class="text-white font-semibold text-lg tracking-tight">{{ title }}</h2>
                     <button type="button" class="cursor-pointer text-white/60 hover:text-white transition-colors"
                         @click="$emit('update:modelValue', false)">

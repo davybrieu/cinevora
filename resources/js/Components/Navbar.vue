@@ -11,7 +11,7 @@
                 <nav v-if="profile" class="hidden items-center gap-3 md:flex">
                     <Link v-for="tab in navTabs" :key="tab.route" :href="route(tab.route)"
                         class="px-4 py-2 text-md font-medium transition" :class="isActive(tab.route)
-                            ? 'border-b-2 border-emerald-500 text-white'
+                            ? 'border-b-2 border-accent text-white'
                             : 'text-white/60 hover:text-white'">
                         {{ tab.label }}
                     </Link>

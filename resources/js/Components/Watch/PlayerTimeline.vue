@@ -2,9 +2,9 @@
     <div class="group mb-3">
         <div class="relative h-1 w-full rounded-full bg-white/20 cursor-pointer transition-all duration-150 group-hover:h-1.5"
             ref="trackRef" @mousedown="handleMouseDown" @contextmenu.prevent>
-            <div class="absolute left-0 top-0 h-full rounded-full bg-emerald-500 transition-all"
+            <div class="absolute left-0 top-0 h-full rounded-full bg-theme-accent transition-all"
                 :style="{ width: `${displayedPercent}%` }" />
-            <div class="absolute top-1/2 h-3 w-3 rounded-full bg-emerald-400 shadow-md shadow-emerald-500/30 -translate-y-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+            <div class="absolute top-1/2 h-3 w-3 rounded-full bg-theme-accent shadow-md shadow-theme-accent/30 -translate-y-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                 :style="{ left: `${displayedPercent}%` }" />
         </div>
     </div>

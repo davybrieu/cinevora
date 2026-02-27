@@ -5,7 +5,7 @@
             : (provider.id ? route('home', { provider: provider.id }) : route('home'))"
             class="flex items-center justify-center gap-2 rounded-md border px-4 py-2 transition-all duration-200 group"
             :class="currentProvider === provider.id
-                ? 'border-emerald-500 bg-emerald-500 text-black'
+                ? 'border-theme-accent bg-theme-accent text-black'
                 : 'border-white/10 bg-white/5 text-white/80 hover:border-white/25 hover:bg-white/10 hover:text-white'"
             preserve-scroll>
             <template v-if="provider.id === null">

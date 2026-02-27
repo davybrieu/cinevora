@@ -52,7 +52,7 @@
                                     <div class="min-w-0 flex-1">
                                         <p class="font-medium text-white">{{ entry.title }}</p>
                                         <p class="mt-0.5 flex items-center gap-1 text-sm"
-                                            :class="entry.is_completed ? 'text-emerald-400' : 'text-amber-400'">
+                                            :class="entry.is_completed ? 'text-theme-accent' : 'text-amber-400'">
                                             <CheckCircleIcon v-if="entry.is_completed" class="h-4 w-4 shrink-0" />
                                             <ExclamationCircleIcon v-else class="h-4 w-4 shrink-0" />
                                             {{ entry.status_label }}

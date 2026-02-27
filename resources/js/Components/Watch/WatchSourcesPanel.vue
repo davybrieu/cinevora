@@ -17,7 +17,7 @@
                 class="cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-all duration-200 break-words"
                 :class="[
                     selectedStream === getStreamSelectionId(stream)
-                        ? 'bg-emerald-600/20 border border-emerald-500/40 text-emerald-400'
+                        ? 'bg-theme-accent/20 border border-theme-accent/40 text-theme-accent'
                         : 'bg-white/5 border border-transparent hover:bg-white/10 text-white/80 hover:text-white',
                 ]">
                 <p class="text-sm font-medium" v-if="stream.title">{{ stream.title }}</p>

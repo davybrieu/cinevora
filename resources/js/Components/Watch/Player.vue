@@ -18,7 +18,7 @@
         <div class="flex items-center justify-between mb-3 min-h-8">
             <Transition name="fade">
                 <button v-if="showSkipNow" type="button"
-                    class="cursor-pointer text-sm font-semibold px-4 py-2 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black transition-all duration-200 shadow-lg shadow-emerald-500/25"
+                    class="cursor-pointer text-sm font-semibold px-4 py-2 rounded-full bg-theme-accent hover:bg-theme-accent-hover text-black transition-all duration-200 shadow-lg shadow-theme-accent/25"
                     @click="emit('skip-now')">
                     {{ t('skip_now') }}
                 </button>
@@ -34,7 +34,7 @@
         <div class="flex items-center text-white justify-between w-full">
             <div class="flex items-center gap-2">
                 <WatchButton type="button"
-                    class="!h-10 !w-10 !rounded-full !bg-emerald-500/90 hover:!bg-emerald-400 !text-black transition-all duration-200 shadow-md shadow-emerald-500/20"
+                    class="!h-10 !w-10 !rounded-full !bg-theme-accent/90 hover:!bg-theme-accent-hover !text-black transition-all duration-200 shadow-md shadow-theme-accent/20"
                     @click="togglePlayPause">
                     <PlayIcon v-if="!isPlaying" class="h-5 w-5" />
                     <PauseIcon v-else class="h-5 w-5" />
@@ -94,7 +94,7 @@
             <button v-for="speed in speedOptions" :key="speed" type="button"
                 class="cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-all duration-200" :class="[
                     playbackRate === speed
-                        ? 'bg-emerald-600/20 border border-emerald-500/40 text-emerald-400'
+                        ? 'bg-theme-accent/20 border border-theme-accent/40 text-theme-accent'
                         : 'bg-white/5 border border-transparent hover:bg-white/10 text-white/80 hover:text-white',
                 ]" @click="setPlaybackRate(speed)">
                 x{{ speed.toFixed(2) }}
@@ -107,7 +107,7 @@
             <button v-for="track in audioTrackOptions" :key="track.index" type="button"
                 class="cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-all duration-200" :class="[
                     selectedAudioTrackIndex === track.index
-                        ? 'bg-emerald-600/20 border border-emerald-500/40 text-emerald-400'
+                        ? 'bg-theme-accent/20 border border-theme-accent/40 text-theme-accent'
                         : 'bg-white/5 border border-transparent hover:bg-white/10 text-white/80 hover:text-white',
                 ]" @click="setAudioTrack(track.index)">
                 <p class="text-sm font-medium">{{ track.label }}</p>
