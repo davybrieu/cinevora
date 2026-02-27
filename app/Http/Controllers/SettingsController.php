@@ -24,8 +24,8 @@ class SettingsController extends Controller
             'email' => $user->email,
             'created_at' => $user->created_at,
             'torrentio_realdebrid_key' => $user->torrentio_realdebrid_key,
-            'torrentio_providers' => $user->torrentio_providers ?? array_keys(TorrentioService::$defaultProviders),
-            'torrentio_language' => $user->torrentio_language ?? array_keys(TorrentioService::$defaultLanguages),
+            'torrentio_providers' => $user->torrentio_providers,
+            'torrentio_language' => $user->torrentio_language,
         ];
     }
 
