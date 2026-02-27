@@ -41,4 +41,15 @@ return [
         'image_base_url' => 'https://image.tmdb.org/t/p/',
     ],
 
+    'opensubtitles' => [
+        'api_key' => env('OPENSUBTITLES_API_KEY'),
+        'api_url' => env('OPENSUBTITLES_API_URL', 'https://api.opensubtitles.com/api/v1'),
+        'user_agent' => env('OPENSUBTITLES_USER_AGENT', env('APP_NAME', 'Cinevora')),
+        'bearer_token' => env('OPENSUBTITLES_BEARER_TOKEN'),
+    ],
+
+    'theintrodb' => [
+        'api_key' => env('THEINTRODB_API_KEY'),
+        'api_url' => env('THEINTRODB_API_URL', 'https://api.theintrodb.com'),
+    ],
 ];

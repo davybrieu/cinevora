@@ -22,7 +22,7 @@
 
             <!-- Watch progress bar (Netflix style) -->
             <div v-if="watchProgressPercent != null && watchProgressPercent > 0"
-                class="absolute bottom-2 left-2 right-2 z-[2] h-1 overflow-hidden rounded-b-lg bg-white/20">
+                class="absolute bottom-2 left-2 right-2 z-[2] h-1.5 overflow-hidden rounded-b-lg bg-white/20">
                 <div class="h-full rounded-l-md bg-theme-accent transition-all duration-300"
                     :style="{ width: Math.min(100, watchProgressPercent) + '%' }" />
             </div>

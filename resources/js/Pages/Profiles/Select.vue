@@ -1,13 +1,12 @@
 <template>
-    <HeadOnlyLayout :title="t('who_is_watching')">
-        <div class="flex min-h-screen flex-col items-center justify-center bg-theme-dark px-4 space-y-12">
+    <AppLayout :title="t('who_is_watching')" :navbar="false" :footer="false">
+        <div class="flex min-h-screen flex-col items-center justify-center px-4 space-y-12">
             <h1 class="text-3xl font-bold text-white md:text-4xl text-center">{{ t('who_is_watching') }}</h1>
 
             <div class="flex flex-wrap items-start justify-center gap-6">
                 <!-- Existing profiles -->
                 <div v-for="profile in profiles" :key="profile.id" class="group relative w-28 md:w-36">
-                    <button 
-                        @click="selectProfile(profile)"
+                    <button @click="selectProfile(profile)"
                         class="cursor-pointer flex w-full flex-col items-center transition-transform transition duration-200 ease-in-out focus:ring-0 focus:outline-none outline-none"
                         tabindex="0">
                         <div
@@ -34,7 +33,8 @@
                         tabindex="0">
                         <div
                             class="flex h-28 w-28 items-center justify-center rounded-full border-2 border-white/20 bg-theme-dark transition-all duration-200 group hover:border-theme-accent hover:shadow-lg md:h-36 md:w-36">
-                            <PlusIcon class="h-12 w-12 text-white/40 transition-colors duration-200 group-hover:text-white" />
+                            <PlusIcon
+                                class="h-12 w-12 text-white/40 transition-colors duration-200 group-hover:text-white" />
                         </div>
                     </button>
                 </div>
@@ -61,7 +61,8 @@
                                 class="overflow-hidden rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-theme-accent outline-none"
                                 :class="createForm.avatar === avatar.name ? 'border-theme-accent shadow-md' : 'border-transparent hover:border-theme-accent hover:shadow-lg'"
                                 tabindex="0">
-                                <img :src="avatar.url" :alt="avatar.name" class="h-full w-full object-cover transition-transform duration-200" />
+                                <img :src="avatar.url" :alt="avatar.name"
+                                    class="h-full w-full object-cover transition-transform duration-200" />
                             </button>
                         </div>
                     </div>
@@ -78,7 +79,7 @@
                 </form>
             </Modal>
         </div>
-    </HeadOnlyLayout>
+    </AppLayout>
 </template>
 
 <script setup>
@@ -87,10 +88,10 @@ import { router, useForm } from '@inertiajs/vue3';
 import { useTranslation } from '../../Composables/useTranslation.js';
 import { PlusIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/24/solid';
-import HeadOnlyLayout from '../../Layouts/HeadOnlyLayout.vue';
 import Modal from '../../Components/Modal.vue';
 import Button from '../../Components/Button.vue';
 import InputGroup from '../../Components/InputGroup.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
 
 const { t } = useTranslation();
 

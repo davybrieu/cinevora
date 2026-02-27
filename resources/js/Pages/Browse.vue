@@ -1,8 +1,8 @@
 <template>
     <AppLayout :title="t('catalog')" :description="t('page_header_browse_desc')">
         <div class="min-h-screen px-8 pb-20 pt-10 md:px-16">
-            <div class="flex flex-col gap-8 lg:flex-row">
-                <aside class="browse-aside w-full shrink-0 lg:w-80">
+            <div class="flex flex-col gap-6">
+                <aside class="browse-aside w-full shrink-0">
                     <div class="browse-aside-panel rounded-xl border border-white/10 overflow-hidden">
                         <!-- Header -->
                         <div class="flex items-center justify-between px-5 py-4">
@@ -22,37 +22,38 @@
                         <div class="px-4">
                             <!-- Clear all -->
                             <div v-if="hasActiveFilters" class="mb-4">
-                                <button type="button" @click="clearAllFilters"
-                                    class="flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 py-2 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white">
+                                <Button variant="secondary" size="sm" class="w-full" @click="clearAllFilters">
                                     <XMarkIcon class="h-3.5 w-3.5" />
                                     {{ t('browse_clear_all') }}
-                                </button>
+                                </Button>
                             </div>
 
-                            <!-- Search -->
-                            <FilterSection v-model:open="openSections.search" :title="t('browse_search')" icon="search">
-                                <input v-model="form.query" type="text" :placeholder="t('search_placeholder')"
-                                    class="w-full" @input="scheduleApply" />
-                            </FilterSection>
+                            <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+                                <!-- Search -->
+                                <FilterSection v-model:open="openSections.search" :title="t('browse_search')"
+                                    icon="search">
+                                    <InputGroup id="browse-query" v-model="form.query" type="text"
+                                        :placeholder="t('search_placeholder')" @update:modelValue="scheduleApply" />
+                                </FilterSection>
 
                             <!-- Type -->
                             <FilterSection v-model:open="openSections.type" :title="t('browse_type')" icon="type">
-                                <select v-model="form.type" class="w-full" @change="scheduleApply">
+                                <SelectGroup id="browse-type" v-model="form.type" @update:modelValue="scheduleApply">
                                     <option value="all">{{ t('all') }}</option>
                                     <option value="movie">{{ t('movie') }}</option>
                                     <option value="tv">{{ t('tv_series') }}</option>
-                                </select>
+                                </SelectGroup>
                             </FilterSection>
 
                             <!-- Watch Providers -->
                             <FilterSection v-model:open="openSections.providers" :title="t('streaming_providers')"
                                 icon="tv">
-                                <select v-model="form.provider" class="w-full" @change="scheduleApply">
-                                    <option value="">{{ t('browse_select_providers') }}</option>
+                                <SelectGroup id="browse-provider" v-model="form.provider"
+                                    :placeholder="t('browse_select_providers')" @update:modelValue="scheduleApply">
                                     <option v-for="p in providers.filter(pr => pr.id)" :key="p.id" :value="p.id">
                                         {{ p.name }}
                                     </option>
-                                </select>
+                                </SelectGroup>
                             </FilterSection>
 
                             <!-- Category -->
@@ -74,21 +75,22 @@
                             <FilterSection v-model:open="openSections.date" :title="t('browse_release_date')"
                                 icon="calendar">
                                 <div class="space-y-2">
-                                    <input v-model="form.date_from" type="date" class="w-full"
-                                        @change="scheduleApply" />
-                                    <input v-model="form.date_to" type="date" class="w-full" @change="scheduleApply" />
+                                    <InputGroup id="browse-date-from" v-model="form.date_from" type="date"
+                                        @update:modelValue="scheduleApply" />
+                                    <InputGroup id="browse-date-to" v-model="form.date_to" type="date"
+                                        @update:modelValue="scheduleApply" />
                                 </div>
                             </FilterSection>
 
                             <!-- Language -->
                             <FilterSection v-model:open="openSections.language" :title="t('language')" icon="language">
-                                <select v-model="form.language" class="w-full" @change="scheduleApply">
-                                    <option value="">{{ t('browse_select_language') }}</option>
+                                <SelectGroup id="browse-language" v-model="form.language"
+                                    :placeholder="t('browse_select_language')" @update:modelValue="scheduleApply">
                                     <option v-for="lang in languages" :key="lang.code || lang[0] || lang"
                                         :value="lang.code || lang[0] || lang">
                                         {{ lang.name }}
                                     </option>
-                                </select>
+                                </SelectGroup>
                             </FilterSection>
 
                             <!-- Rating -->
@@ -107,61 +109,60 @@
                                 </div>
                             </FilterSection>
 
-                            <!-- Vote count -->
-                            <FilterSection v-model:open="openSections.votes" :title="t('browse_vote_count_min')"
-                                icon="votes">
-                                <div class="space-y-2 pt-0.5">
-                                    <input v-model.number="form.vote_count_min" type="range" min="0" max="500" step="50"
-                                        class="browse-range h-2 w-full appearance-none rounded-full bg-white/10 accent-theme-accent"
-                                        @input="scheduleApply" />
-                                    <div class="flex justify-between text-xs text-white/40">
-                                        <span>0</span>
-                                        <span class="text-theme-accent font-semibold">
-                                            {{ (form.vote_count_min || 0) + '+' }}
-                                        </span>
-                                        <span>500</span>
+                                <!-- Vote count -->
+                                <FilterSection v-model:open="openSections.votes" :title="t('browse_vote_count_min')"
+                                    icon="votes">
+                                    <div class="space-y-2 pt-0.5">
+                                        <input v-model.number="form.vote_count_min" type="range" min="0" max="500"
+                                            step="50"
+                                            class="browse-range h-2 w-full appearance-none rounded-full bg-white/10 accent-theme-accent"
+                                            @input="scheduleApply" />
+                                        <div class="flex justify-between text-xs text-white/40">
+                                            <span>0</span>
+                                            <span class="text-theme-accent font-semibold">
+                                                {{ (form.vote_count_min || 0) + '+' }}
+                                            </span>
+                                            <span>500</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </FilterSection>
-
+                                </FilterSection>
+                            </div>
                         </div>
                     </div>
                 </aside>
 
                 <!-- Results -->
-                <main class="min-w-0 flex-1">
-                    <div
-                        class="flex flex-col items-center w-full sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
-                        <p class="py-2 text-sm text-white/50 text-center w-full sm:text-left sm:flex-1 sm:min-w-0">
-                            {{ t('browse_showing') }} {{ totalLoaded }} {{ t('browse_of') }} {{ totalResultsLabel }}
-                        </p>
-                        <div class="w-full flex justify-center sm:justify-end sm:w-auto sm:flex-1 min-w-[180px]">
-                            <select v-model="form.sort" class="w-full" @change="scheduleApply">
-                                <option v-for="(labelKey, value) in sortOptions" :key="value" :value="value">
-                                    {{ t(labelKey) }}
-                                </option>
-                            </select>
-                        </div>
+                <div
+                    class="flex flex-col items-center w-full sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+                    <p class="py-2 text-sm text-white/50 text-center w-full sm:text-left sm:flex-1 sm:min-w-0">
+                        {{ t('browse_showing') }} {{ totalLoaded }} {{ t('browse_of') }} {{ totalResultsLabel }}
+                    </p>
+                    <div class="w-full flex justify-center sm:justify-end sm:w-auto sm:flex-1 min-w-[180px]">
+                        <SelectGroup id="browse-sort" v-model="form.sort" @update:modelValue="scheduleApply">
+                            <option v-for="(labelKey, value) in sortOptions" :key="value" :value="value">
+                                {{ t(labelKey) }}
+                            </option>
+                        </SelectGroup>
                     </div>
-                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5">
-                        <MovieCard v-for="item in allItems" :key="`${item.media_type}-${item.id}`" :item="item"
-                            :card-width="null" class="!w-full" />
-                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
+                    <MovieCard v-for="item in allItems" :key="`${item.media_type}-${item.id}`" :item="item"
+                        :card-width="null" class="!w-full" />
+                </div>
 
-                    <div ref="sentinel" class="flex justify-center py-10">
-                        <div v-if="loading" class="flex items-center gap-2 text-sm text-white/40">
-                            <Spinner />
-                            {{ t('loading') }}
-                        </div>
-                        <p v-else-if="page >= totalPages && allItems.length > 0" class="text-xs text-white/20">
-                            {{ allItems.length }} {{ t('results_displayed') }}
-                        </p>
+                <div ref="sentinel" class="flex justify-center py-10">
+                    <div v-if="loading" class="flex items-center gap-2 text-sm text-white/40">
+                        <Spinner />
+                        {{ t('loading') }}
                     </div>
+                    <p v-else-if="page >= totalPages && allItems.length > 0" class="text-xs text-white/20">
+                        {{ allItems.length }} {{ t('results_displayed') }}
+                    </p>
+                </div>
 
-                    <div v-if="allItems.length === 0 && !loading" class="py-20 text-center">
-                        <p class="text-lg text-theme-text-muted">{{ t('no_results') }}</p>
-                    </div>
-                </main>
+                <div v-if="allItems.length === 0 && !loading" class="py-20 text-center">
+                    <p class="text-lg text-theme-text-muted">{{ t('no_results') }}</p>
+                </div>
             </div>
         </div>
     </AppLayout>
@@ -176,10 +177,13 @@ import AppLayout from '../Layouts/AppLayout.vue';
 import MovieCard from '../Components/MovieCard.vue';
 import Spinner from '../Components/Spinner.vue';
 import FilterSection from '../Components/Browse/FilterSection.vue';
+import InputGroup from '../Components/InputGroup.vue';
+import SelectGroup from '../Components/SelectGroup.vue';
 import {
     FunnelIcon,
     XMarkIcon,
 } from '@heroicons/vue/24/outline';
+import Button from '@/Components/Button.vue';
 const { t } = useTranslation();
 
 const props = defineProps({

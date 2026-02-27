@@ -3,16 +3,16 @@
         ? 'bg-gradient-to-b from-black/70 to-transparent'
         : 'bg-theme-dark/95 shadow-xl shadow-black/30 backdrop-blur-md'">
         <div class="flex items-center justify-between px-8 py-4 md:px-16">
-            <div class="flex items-center gap-8">
-                <Link :href="route('landing')" class="shrink-0">
+            <div class="flex items-center">
+                <Link :href="route('landing')" class="shrink-0 mr-6">
                     <img src="/images/logo.svg" alt="logo" class="h-auto max-w-34">
                 </Link>
 
-                <nav v-if="profile" class="hidden items-center gap-5 md:flex">
+                <nav v-if="profile" class="hidden items-center gap-3 md:flex">
                     <Link v-for="tab in navTabs" :key="tab.route" :href="route(tab.route)"
-                        class="rounded-md px-4 py-2 text-md font-medium transition" :class="isActive(tab.route)
-                            ? 'bg-white/10 text-white'
-                            : 'text-white/60 hover:bg-white/5 hover:text-white'">
+                        class="px-4 py-2 text-md font-medium transition" :class="isActive(tab.route)
+                            ? 'border-b-2 border-emerald-500 text-white'
+                            : 'text-white/60 hover:text-white'">
                         {{ tab.label }}
                     </Link>
                 </nav>

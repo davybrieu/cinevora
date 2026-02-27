@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TorrentioService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,9 @@ class SettingsController extends Controller
             'name' => $user->name,
             'email' => $user->email,
             'created_at' => $user->created_at,
+            'torrentio_realdebrid_key' => $user->torrentio_realdebrid_key,
+            'torrentio_providers' => $user->torrentio_providers ?? array_keys(TorrentioService::$defaultProviders),
+            'torrentio_language' => $user->torrentio_language ?? array_keys(TorrentioService::$defaultLanguages),
         ];
     }
 
@@ -69,6 +73,8 @@ class SettingsController extends Controller
     {
         return Inertia::render('Settings/Account', [
             'user' => $this->getUserData(),
+            'providerOptions' => TorrentioService::$defaultProviders,
+            'languageOptions' => TorrentioService::$defaultLanguages,
         ]);
     }
 
@@ -104,9 +110,18 @@ class SettingsController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'torrentio_realdebrid_key' => ['nullable', 'string', 'max:255'],
+            'torrentio_providers' => ['nullable', 'array'],
+            'torrentio_providers.*' => ['string', Rule::in(array_keys(TorrentioService::$defaultProviders))],
+            'torrentio_language' => ['nullable', 'array'],
+            'torrentio_language.*' => ['string', Rule::in(array_keys(TorrentioService::$defaultLanguages))],
         ]);
 
-        $user->fill($validated);
+        $user->fill([
+            ...$validated,
+            'torrentio_providers' => array_values($validated['torrentio_providers'] ?? []),
+            'torrentio_language' => array_values($validated['torrentio_language'] ?? []),
+        ]);
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;

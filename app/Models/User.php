@@ -27,6 +27,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'torrentio_realdebrid_key',
+        'torrentio_providers',
+        'torrentio_language',
     ];
 
     /**
@@ -49,6 +52,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'torrentio_realdebrid_key' => 'encrypted',
+            'torrentio_providers' => 'array',
+            'torrentio_language' => 'array',
         ];
     }
 }

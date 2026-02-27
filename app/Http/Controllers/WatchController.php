@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TmdbResource;
+use App\Models\User;
 use App\Models\WatchProgress;
 use App\Services\TmdbService;
 use App\Services\TorrentioService;
@@ -36,30 +37,9 @@ class WatchController extends Controller
         $profileId = request()->session()->get('profile_id');
         $item = $this->resource->formatDetail($data, $type, $profileId);
 
-        // Chercher dans WatchProgress si on a une progression
-        $progress = 0;
-        if ($profileId) {
-            $progressQuery = WatchProgress::where('profile_id', $profileId)
-                ->where('item_id', $id)
-                ->where('item_type', $type);
+        $streams = $this->getStreams($item['imdb_id'], $type, $season, $episode, request()->user());
 
-            if ($type === 'tv' && $season !== null && $episode !== null) {
-                $progressQuery = $progressQuery
-                    ->where('season', $season)
-                    ->where('episode', $episode);
-            }
-
-            $progressRow = $progressQuery->orderByDesc('updated_at')->first();
-            if ($progressRow && $progressRow->progress > 0) {
-                $progress = $progressRow->progress;
-            }
-        }
-
-        if ($type === 'movie') {
-            $iframeSrc = "https://player.videasy.net/movie/{$id}?overlay=true&progress={$progress}";
-        } else if ($type === 'tv') {
-            $iframeSrc = "https://player.videasy.net/tv/{$id}/{$season}/{$episode}?overlay=true&nextEpisode=false&episodeSelector=false&progress={$progress}";
-        }
+        $progress = $this->getProgress($id, $type, $season, $episode);
 
         return Inertia::render('Watch', [
             'type' => $type,
@@ -67,7 +47,69 @@ class WatchController extends Controller
             'tmdb_id' => $id,
             'season' => $season,
             'episode' => $episode,
-            'iframeSrc' => $iframeSrc,
+            'streams' => $streams,
+            'progress' => $progress,
         ]);
+    }
+
+    private function getStreams(string $imdbId, string $movieType, ?int $season = null, ?int $episode = null, ?User $user = null): array
+    {
+        if ($movieType === 'tv') {
+            $payload = $this->torrentio->getSeriesStreams($imdbId, $season, $episode, $user);
+        } elseif ($movieType === "movie") {
+            $payload = $this->torrentio->getMovieStreams($imdbId, $user);
+        } else {
+            return [];
+        }
+
+        $streams = $payload['streams'] ?? [];
+        if (!is_array($streams)) {
+            return [];
+        }
+
+        return collect($streams)
+            ->map(fn($stream) => [
+                'infoHash' => strtolower((string) ($stream['infoHash'] ?? '')),
+                'title' => (string) ($stream['title'] ?? ''),
+                'name' => (string) ($stream['name'] ?? ''),
+                'fileIdx' => isset($stream['fileIdx']) ? (int) $stream['fileIdx'] : null,
+                'filename' => $stream['filename'] ?? null,
+                'url' => $stream['url'] ?? null,
+            ])
+            ->values()
+            ->all();
+    }
+
+    private function getProgress(int $itemId, string $itemType, ?int $season = null, ?int $episode = null): array
+    {
+        $profileId = request()->session()->get('profile_id');
+        if (!$profileId) {
+            return ['watched_progress' => 0, 'watched_duration' => 0];
+        }
+
+        $query = WatchProgress::query()
+            ->where('profile_id', $profileId)
+            ->where('item_id', $itemId)
+            ->where('item_type', $itemType);
+
+        if ($itemType === 'tv') {
+            $query
+                ->where('season', $season ?? 0)
+                ->where('episode', $episode ?? 0);
+        } else {
+            $query
+                ->where('season', 0)
+                ->where('episode', 0);
+        }
+
+        $progress = $query->first();
+        if (!$progress) {
+            return ['watched_progress' => 0, 'watched_duration' => 0];
+        }
+
+        return [
+            'watched_progress' => (int) $progress->progress,
+            'watched_duration' => (int) $progress->duration,
+        ];
     }
 }
