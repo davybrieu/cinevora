@@ -323,19 +323,24 @@ function handlePlayerMouseMove() {
 }
 
 function handlePlayerMouseLeave() {
-    hideControls();
+    if (showPanel.value) return;
+    if (!isReadyToPlay.value) return;
+    scheduleControlsHide();
 }
 
 function handleWindowBlur() {
-    hideControls();
+    if (!isReadyToPlay.value) return;
+    scheduleControlsHide();
 }
 
 function handleDocumentVisibilityChange() {
-    if (document.hidden) hideControls();
+    if (!isReadyToPlay.value || !document.hidden) return;
+    scheduleControlsHide();
 }
 
 function handleDocumentMouseLeave(event) {
-    if (event.relatedTarget === null) hideControls();
+    if (!isReadyToPlay.value || event.relatedTarget !== null) return;
+    scheduleControlsHide();
 }
 
 async function handleStream() {

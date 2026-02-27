@@ -14,7 +14,7 @@
         </transition>
     </div>
 
-    <div v-show="controlsVisible" class="player-controls absolute inset-x-0 bottom-0 z-30 px-5 pb-5 pt-20">
+    <div v-show="controlsVisible" class="player-controls absolute inset-x-0 bottom-0 z-30 px-5 pb-5">
         <div class="flex items-center justify-between mb-3 min-h-8">
             <Transition name="fade">
                 <button v-if="showSkipNow" type="button"
@@ -23,6 +23,10 @@
                     {{ t('skip_now') }}
                 </button>
             </Transition>
+        </div>
+
+        <div class="flex items-center gap-2 font-semibold text-white text-2xl mb-4" v-if="pageTitle">
+            {{ pageTitle }}
         </div>
 
         <PlayerTimeline :current-time="currentTime" :duration="duration" @seek="handleSeekByRatio" />
@@ -36,6 +40,8 @@
                     <PauseIcon v-else class="h-5 w-5" />
                 </WatchButton>
 
+                <div class="mx-2 hidden h-6 w-px bg-white/10 sm:block"></div>
+
                 <WatchButton type="button" @click="seekBy(-10)" title="Seek -10">
                     <BackwardIcon class="h-5 w-5" />
                 </WatchButton>
@@ -44,18 +50,18 @@
                     <ForwardIcon class="h-5 w-5" />
                 </WatchButton>
 
+                <div class="mx-2 hidden h-6 w-px bg-white/10 sm:block"></div>
+
                 <PlayerVolumeControl :is-muted="isMuted" :volume="volume" @toggle-mute="toggleMute"
                     @set-volume="setVolumeByRatio" />
+
+                <div class="mx-2 hidden h-6 w-px bg-white/10 sm:block"></div>
 
                 <div class="text-xs tabular-nums text-white/60 min-w-24 px-1">
                     <span class="text-white/90">{{ formattedCurrentTime }}</span>
                     <span class="mx-1 text-white/30">/</span>
                     <span>{{ formattedDuration }}</span>
                 </div>
-            </div>
-
-            <div class="flex items-center gap-2 font-semibold" v-if="pageTitle">
-                {{ pageTitle }}
             </div>
 
             <div class="flex items-center gap-2">
@@ -68,6 +74,9 @@
                 <WatchButton type="button" @click="showCastPanel = true" title="Cast">
                     <TvIcon class="h-5 w-5" />
                 </WatchButton>
+
+                <div class="mx-2 hidden h-6 w-px bg-white/10 sm:block"></div>
+
                 <WatchButton type="button" class="disabled:opacity-40 disabled:cursor-not-allowed"
                     :disabled="!pipSupported" @click="togglePip" :title="t('pip')">
                     <RectangleStackIcon class="h-5 w-5" />
@@ -543,77 +552,6 @@ function promptAirPlay() {
     video.webkitShowPlaybackTargetPicker();
 }
 
-function isTypingTarget(target) {
-    if (!(target instanceof HTMLElement)) return false;
-    const tag = target.tagName.toLowerCase();
-    return tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
-}
-
-async function handleGlobalKeydown(event) {
-    if (!getVideo() || isTypingTarget(event.target)) return;
-    const key = event.key.toLowerCase();
-
-    if (key === ' ' || key === 'k') {
-        event.preventDefault();
-        await togglePlayPause();
-        return;
-    }
-    if (key === 'm') {
-        event.preventDefault();
-        toggleMute();
-        return;
-    }
-    if (key === 'f') {
-        event.preventDefault();
-        await toggleFullscreen();
-        return;
-    }
-    if (key === '>') {
-        event.preventDefault();
-        const currentIndex = speedOptions.indexOf(playbackRate.value);
-        const nextIndex = Math.min(speedOptions.length - 1, currentIndex + 1);
-        setPlaybackRate(speedOptions[nextIndex]);
-        return;
-    }
-    if (key === '<') {
-        event.preventDefault();
-        const currentIndex = speedOptions.indexOf(playbackRate.value);
-        const nextIndex = Math.max(0, currentIndex - 1);
-        setPlaybackRate(speedOptions[nextIndex]);
-        return;
-    }
-    if (key === 'p') {
-        event.preventDefault();
-        await togglePip();
-        return;
-    }
-    if (key === 'a') {
-        event.preventDefault();
-        showAudioPanel.value = !showAudioPanel.value;
-        return;
-    }
-    if (key === 'arrowleft' || key === 'j') {
-        event.preventDefault();
-        seekBy(-10);
-        return;
-    }
-    if (key === 'arrowright' || key === 'l') {
-        event.preventDefault();
-        seekBy(10);
-        return;
-    }
-    if (key === 'arrowup') {
-        event.preventDefault();
-        adjustVolume(0.05);
-        return;
-    }
-    if (key === 'arrowdown') {
-        event.preventDefault();
-        adjustVolume(-0.05);
-        return;
-    }
-}
-
 onMounted(() => {
     const video = getVideo();
     if (video) {
@@ -627,7 +565,6 @@ onMounted(() => {
         syncVideoState();
     }
     document.addEventListener('fullscreenchange', syncFullscreenState);
-    document.addEventListener('keydown', handleGlobalKeydown);
     syncFullscreenState();
 });
 
@@ -642,7 +579,6 @@ onUnmounted(() => {
     }
     detachAudioTrackListener();
     document.removeEventListener('fullscreenchange', syncFullscreenState);
-    document.removeEventListener('keydown', handleGlobalKeydown);
 });
 
 watch(() => unwrapElement(props.videoRef), (nextVideo, prevVideo) => {

@@ -7,7 +7,7 @@
 }
 
 @theme {
-    --color-theme-dark: #141414;
+    --color-theme-dark: #010906;
     --color-theme-darker: #0a0a0a;
     --color-theme-accent: #10b981;
     --color-theme-accent-hover: #34d399;
@@ -22,7 +22,7 @@ html {
 }
 
 body {
-    background-color: #141414;
+    background-color: var(--color-theme-dark);
     overflow-x: hidden;
 }
 

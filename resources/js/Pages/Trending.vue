@@ -2,30 +2,23 @@
     <AppLayout :title="t('trending')" :description="t('page_header_trending_desc')">
         <div class="px-8 pb-20 pt-10 md:px-16">
             <div class="mb-8 flex flex-wrap justify-end gap-2">
-                    <Button
-                        v-for="time in timeOptions"
-                        :key="time.value"
-                        :variant="filters.time === time.value ? 'primary' : 'secondary'"
-                        size="sm"
-                        @click="updateFilter('time', time.value)"
-                    >
-                        {{ time.label }}
-                    </Button>
+                <Button v-for="time in timeOptions" :key="time.value"
+                    :variant="filters.time === time.value ? 'primary' : 'secondary'" size="sm"
+                    @click="updateFilter('time', time.value)">
+                    {{ time.label }}
+                </Button>
 
-                    <div class="mx-2 hidden h-8 w-px bg-white/10 sm:block"></div>
+                <div class="mx-2 hidden h-8 w-px bg-white/10 sm:block"></div>
 
-                    <Button
-                        v-for="type in typeOptions"
-                        :key="type.value"
-                        :variant="filters.type === type.value ? 'primary' : 'secondary'"
-                        size="sm"
-                        @click="updateFilter('type', type.value)"
-                    >
-                        {{ type.label }}
-                    </Button>
-                </div>
+                <Button v-for="type in typeOptions" :key="type.value"
+                    :variant="filters.type === type.value ? 'primary' : 'secondary'" size="sm"
+                    @click="updateFilter('type', type.value)">
+                    {{ type.label }}
+                </Button>
+            </div>
 
-            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
+            <div
+                class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
                 <MovieCard v-for="item in allItems" :key="item.id" :item="item" :card-width="null" class="!w-full" />
             </div>
 

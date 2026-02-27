@@ -1,9 +1,15 @@
 <template>
 
     <Head :title="title" />
-    <div class="relative min-h-screen overflow-hidden bg-theme-dark">
-        <div
-            class="pointer-events-none absolute inset-0 z-0 bg-image-url('https://zerator.com/assets/images/parallax/03.png')">
+    <div class="relative min-h-screen overflow-hidden">
+        <div class="pointer-events-none z-10 absolute left-0 top-0 right-0 lg:right-grid-xs block w-full">
+            <div
+                class="h-[600px] pt-grid-xs lg:pt-0 pr-0 w-full flex items-center justify-center lg:pr-grid-xs lg:rounded-xl ring-1 ring-theme-accent/10 ring-inset relative">
+                <div class="absolute inset-0 lg:rounded-xl opacity-15 pointer-events-none overflow-hidden">
+                    <div class="w-full h-full bg-center bg-theme-accent"></div>
+                </div>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-theme-dark z-10"></div>
         </div>
 
         <div class="relative z-10">

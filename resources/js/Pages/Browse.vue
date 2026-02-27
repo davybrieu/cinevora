@@ -12,7 +12,7 @@
                             </div>
                             <div>
                                 <h2 class="text-base font-semibold tracking-tight text-white">{{ t('browse_filters')
-                                    }}</h2>
+                                }}</h2>
                                 <p class="text-xs text-white/45 mt-0.5">{{ t('catalog') }}</p>
                             </div>
                         </div>
@@ -146,18 +146,21 @@
                         :card-width="null" class="!w-full" />
                 </div>
 
-                <div ref="sentinel" class="flex justify-center py-10">
-                    <div v-if="loading" class="flex items-center gap-2 text-sm text-white/40">
-                        <Spinner />
-                        {{ t('loading') }}
+                <div class="flex w-full justify-center py-10 text-center">
+                    <div ref="sentinel">
+                        <div v-if="loading" class="flex items-center justify-center gap-2 text-sm text-white/40">
+                            <Spinner />
+                            {{ t('loading') }}
+                        </div>
+                        <p v-else-if="page >= totalPages && allItems.length > 0"
+                            class="text-center text-xs text-white/20">
+                            {{ allItems.length }} {{ t('results_displayed') }}
+                        </p>
                     </div>
-                    <p v-else-if="page >= totalPages && allItems.length > 0" class="text-xs text-white/20">
-                        {{ allItems.length }} {{ t('results_displayed') }}
-                    </p>
-                </div>
 
-                <div v-if="allItems.length === 0 && !loading" class="py-20 text-center">
-                    <p class="text-lg text-theme-text-muted">{{ t('no_results') }}</p>
+                    <div v-if="allItems.length === 0 && !loading">
+                        <p class="text-lg text-theme-text-muted">{{ t('no_results') }}</p>
+                    </div>
                 </div>
             </div>
         </div>
