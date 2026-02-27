@@ -1,7 +1,7 @@
 <template>
     <AuthLayout :title="t('forgot_password')">
-        <div class="relative z-10 flex flex-1 flex-col items-center justify-center px-8">
-            <Card class="w-full max-w-md">
+        <div class="relative z-10 flex flex-1 flex-col items-center justify-center px-4 sm:px-8">
+            <Card class="w-full max-w-[95vw] sm:max-w-md">
                 <h1 class="mb-3 text-2xl font-bold text-white">{{ t('forgot_password') }}</h1>
                 <p class="mb-6 text-sm text-white/60">{{ t('forgot_password_hint') }}</p>
 

@@ -1,7 +1,7 @@
 <template>
     <AppLayout :title="t('who_is_watching')" :navbar="false" :footer="false">
         <div class="flex min-h-screen flex-col items-center justify-center px-4 space-y-12">
-            <h1 class="text-3xl font-bold text-white md:text-4xl text-center">{{ t('who_is_watching') }}</h1>
+            <h1 class="text-2xl font-bold text-white sm:text-3xl md:text-4xl text-center">{{ t('who_is_watching') }}</h1>
 
             <div class="flex flex-wrap items-start justify-center gap-6">
                 <!-- Existing profiles -->
@@ -55,7 +55,7 @@
 
                     <div>
                         <label class="mb-2 block text-sm text-white/70">{{ t('choose_avatar') }}</label>
-                        <div class="grid grid-cols-6 gap-3">
+                        <div class="grid grid-cols-4 gap-2 sm:grid-cols-6 sm:gap-3">
                             <button v-for="avatar in avatars" :key="avatar.name" type="button"
                                 @click="createForm.avatar = avatar.name"
                                 class="overflow-hidden rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-theme-accent outline-none"

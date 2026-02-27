@@ -1,6 +1,6 @@
 <template>
     <AppLayout :title="t('privacy_policy')" :description="t('page_header_privacy_desc')">
-        <div class="mx-auto max-w-3xl px-8 pb-20 pt-10 md:px-16">
+        <div class="mx-auto max-w-3xl px-4 pb-20 pt-10 sm:px-8 md:px-16">
             <Card>
                 <div class="space-y-6 text-sm leading-relaxed text-white/60">
                     <section v-for="(key, i) in ['collect', 'usage', 'cookies', 'thirdparty', 'contact']" :key="key">

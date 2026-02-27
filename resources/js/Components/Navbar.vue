@@ -1,11 +1,11 @@
 <template>
-    <nav class="fixed left-0 right-0 top-0 z-40 transition-all duration-500" :class="!isScrolled
+    <nav class="fixed left-0 right-0 top-0 z-40 transition-all duration-500" :class="!isScrolled && !mobileMenuOpen
         ? 'bg-gradient-to-b from-black/70 to-transparent'
         : 'bg-theme-dark/95 shadow-xl shadow-black/30 backdrop-blur-md'">
-        <div class="flex items-center justify-between px-8 py-4 md:px-16">
+        <div class="flex items-center justify-between px-4 py-3 sm:px-8 sm:py-4 md:px-16">
             <div class="flex items-center">
-                <Link :href="route('landing')" class="shrink-0 mr-6">
-                    <img src="/images/logo.svg" alt="logo" class="h-auto max-w-34">
+                <Link :href="route('landing')" class="shrink-0 mr-4 sm:mr-6">
+                    <img src="/images/logo.svg" alt="logo" class="h-auto max-w-[110px] sm:max-w-34">
                 </Link>
 
                 <nav v-if="profile" class="hidden items-center gap-3 md:flex">
@@ -17,12 +17,12 @@
                     </Link>
                 </nav>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3">
                 <template v-if="!profile || !page.props.auth.user">
                     <Button variant="primary" size="sm" :href="route('login')">
                         {{ t('sign_in') }}
                     </Button>
-                    <Button variant="secondary" size="sm" :href="route('register')">
+                    <Button variant="secondary" size="sm" :href="route('register')" class="hidden sm:inline-flex">
                         {{ t('sign_up') }}
                     </Button>
                 </template>
@@ -76,8 +76,31 @@
                 </Dropdown>
 
                 <LanguageSwitcher />
+
+                <button v-if="profile" type="button" @click="mobileMenuOpen = !mobileMenuOpen"
+                    class="flex h-10 w-10 items-center justify-center rounded text-white/70 transition hover:bg-white/10 hover:text-white md:hidden cursor-pointer">
+                    <XMarkIcon v-if="mobileMenuOpen" class="h-6 w-6" />
+                    <Bars3Icon v-else class="h-6 w-6" />
+                </button>
             </div>
         </div>
+
+        <Transition enter-active-class="transition-all duration-200 ease-out"
+            enter-from-class="opacity-0 -translate-y-2" enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition-all duration-150 ease-in" leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 -translate-y-2">
+            <div v-if="mobileMenuOpen && profile" class="border-t border-white/10 md:hidden">
+                <div class="space-y-1 px-4 pb-4 pt-2">
+                    <Link v-for="tab in navTabs" :key="tab.route" :href="route(tab.route)"
+                        @click="mobileMenuOpen = false"
+                        class="block rounded-lg px-4 py-3 text-sm font-medium transition" :class="isActive(tab.route)
+                            ? 'bg-theme-accent/15 text-theme-accent'
+                            : 'text-white/70 hover:bg-white/5 hover:text-white'">
+                        {{ tab.label }}
+                    </Link>
+                </div>
+            </div>
+        </Transition>
     </nav>
 </template>
 
@@ -90,13 +113,14 @@ import SearchBar from './SearchBar.vue';
 import LanguageSwitcher from './LanguageSwitcher.vue';
 import Dropdown from './Dropdown.vue';
 import Button from '@/Components/Button.vue';
-import { UserGroupIcon, ArrowRightStartOnRectangleIcon, HeartIcon, Cog6ToothIcon, ChartBarIcon } from '@heroicons/vue/24/outline';
+import { UserGroupIcon, ArrowRightStartOnRectangleIcon, HeartIcon, Cog6ToothIcon, ChartBarIcon, Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
 
 const page = usePage();
 const { t } = useTranslation();
 
 const isScrolled = ref(false);
 const profileDropdownOpen = ref(false);
+const mobileMenuOpen = ref(false);
 
 const profile = computed(() => page.props.auth?.profile);
 

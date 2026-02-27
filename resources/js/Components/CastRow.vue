@@ -1,6 +1,6 @@
 <template>
     <section v-if="cast.length" class="cast-row">
-        <SectionTitle :title="title" :count="count" class="px-8 md:px-16" />
+        <SectionTitle :title="title" :count="count" class="px-4 sm:px-8 md:px-16" />
 
         <ScrollRow section-class="cast-row" v-slot="{ wasDragged }">
             <Link v-for="person in cast" :key="person.id" :href="route('person.show', person.id)"

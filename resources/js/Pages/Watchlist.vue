@@ -1,6 +1,6 @@
 <template>
     <AppLayout :title="t('my_watchlist')" :description="t('page_header_watchlist_desc')">
-        <div class="px-8 pb-20 pt-10 md:px-16">
+        <div class="px-4 pb-20 pt-10 sm:px-8 md:px-16">
             <div
                 v-if="items.length"
                 class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7"

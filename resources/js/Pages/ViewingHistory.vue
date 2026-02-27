@@ -1,6 +1,6 @@
 <template>
     <AppLayout :title="t('viewing_history_title')" :description="t('page_header_viewing_history_desc')">
-        <div class="px-8 pb-20 pt-10 md:px-16">
+        <div class="px-4 pb-20 pt-10 sm:px-8 md:px-16">
             <div v-if="hasHistory" class="mb-6 flex justify-end">
                 <Button variant="primary" size="md" :disabled="clearing" @click="clearAllHistory">
                     {{ clearing ? t('loading') : t('viewing_history_clear_all') }}

@@ -1,6 +1,6 @@
 <template>
     <AppLayout :title="t('catalog')" :description="t('page_header_browse_desc')">
-        <div class="px-8 pb-20 pt-10 md:px-16">
+        <div class="px-4 pb-20 pt-10 sm:px-8 md:px-16">
             <div class="mb-8 flex flex-wrap justify-end gap-2">
                 <div class="browse-aside-panel rounded-xl border border-white/10 overflow-hidden">
                     <!-- Header -->

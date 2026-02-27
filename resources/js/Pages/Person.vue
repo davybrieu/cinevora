@@ -1,14 +1,14 @@
 <template>
     <AppLayout :title="person.name">
-        <div class="px-8 pb-8 pt-28 md:px-16">
-            <div class="flex flex-col gap-8 md:flex-row">
-                <div class="w-48 flex-shrink-0 md:w-64">
+        <div class="px-4 pb-8 pt-28 sm:px-8 md:px-16">
+            <div class="flex flex-col gap-4 sm:gap-6 md:gap-8 md:flex-row">
+                <div class="w-36 flex-shrink-0 sm:w-40 md:w-48 lg:w-64">
                     <PosterImage :src="person.profile_path" :alt="person.name" type="person"
                         class="aspect-[2/3] w-full rounded-xl shadow-2xl" />
                 </div>
 
                 <div class="flex-1">
-                    <h1 class="mb-3 text-3xl font-black text-white md:text-5xl">{{ person.name }}</h1>
+                    <h1 class="mb-3 text-2xl font-black text-white sm:text-3xl md:text-5xl">{{ person.name }}</h1>
 
                     <div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-white/40">
                         <Badge v-if="person.known_for_department" size="md">{{ person.known_for_department }}</Badge>
@@ -38,7 +38,7 @@
 
             <!-- Photos -->
             <section v-if="person.images.length">
-                <SectionTitle :title="t('photos')" :count="person.images.length" class="px-8 md:px-16" />
+                <SectionTitle :title="t('photos')" :count="person.images.length" class="px-4 sm:px-8 md:px-16" />
                 <ImageGallery :images="person.images" type="profiles" key-prefix="photo" />
             </section>
 

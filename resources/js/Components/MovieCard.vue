@@ -46,9 +46,9 @@
                         enter-from-class="opacity-0 scale-95 translate-y-4"
                         enter-to-class="opacity-100 scale-100 translate-y-0" appear>
                         <div v-if="showDetail"
-                            class="relative w-full max-w-3xl overflow-y-auto rounded-xl bg-theme-dark shadow-2xl">
+                            class="relative w-full max-w-[95vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl overflow-y-auto rounded-xl bg-theme-dark shadow-2xl max-h-[90vh]">
                             <!-- Backdrop image with reduced/max height -->
-                            <div class="relative w-full h-[250px]">
+                            <div class="relative w-full h-[160px] sm:h-[200px] md:h-[250px]">
                                 <img v-if="item.backdrop_path" :src="item.backdrop_path" :alt="item.title"
                                     class="absolute inset-0 w-full h-full object-cover rounded-t-xl" loading="lazy" />
                                 <div v-else class="flex h-full items-center justify-center bg-transparent">
@@ -60,8 +60,8 @@
                                     <XMarkIcon class="h-5 w-5 text-white" />
                                 </button>
                             </div>
-                            <div class="px-6 py-6">
-                                <MovieInfo :item="item" title-class="text-2xl md:text-3xl"
+                            <div class="px-4 py-4 sm:px-6 sm:py-6">
+                                <MovieInfo :item="item" title-class="text-xl sm:text-2xl md:text-3xl"
                                     overview-class="line-clamp-4 text-sm text-theme-text">
                                     <div class="mt-5 flex flex-wrap gap-3">
                                         <Button :href="detailUrl" variant="primary" size="md"

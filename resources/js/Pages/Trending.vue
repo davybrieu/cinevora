@@ -1,6 +1,6 @@
 <template>
     <AppLayout :title="t('trending')" :description="t('page_header_trending_desc')">
-        <div class="px-8 pb-20 pt-10 md:px-16">
+        <div class="px-4 pb-20 pt-10 sm:px-8 md:px-16">
             <div class="mb-8 flex flex-wrap justify-end gap-2">
                 <Button v-for="time in timeOptions" :key="time.value"
                     :variant="filters.time === time.value ? 'primary' : 'secondary'" size="sm"

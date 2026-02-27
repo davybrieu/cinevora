@@ -2,14 +2,14 @@
     <AppLayout :title="pageTitle" :navbar="false" :footer="false">
         <div class="fixed inset-0 z-50 bg-black">
             <!-- Top controls when player is not ready -->
-            <div v-if="!(selectedStream && isReadyToPlay)" class="absolute top-6 left-6 z-60">
+            <div v-if="!(selectedStream && isReadyToPlay)" class="absolute top-3 left-3 z-60 sm:top-6 sm:left-6">
                 <Button :href="backUrl" variant="secondary" size="sm" class="!rounded-full shadow-lg">
                     <ArrowLeftIcon class="h-5 w-5" />
-                    {{ t('back') }}
+                    <span class="hidden sm:inline">{{ t('back') }}</span>
                 </Button>
             </div>
 
-            <div v-if="!(selectedStream && isReadyToPlay)" class="absolute top-6 right-6 z-60">
+            <div v-if="!(selectedStream && isReadyToPlay)" class="absolute top-3 right-3 z-60 sm:top-6 sm:right-6">
                 <Button type="button" variant="secondary" size="sm" class="!rounded-full shadow-lg"
                     @click="showPanel = !showPanel">
                     <SignalIcon class="h-5 w-5" />
@@ -21,14 +21,14 @@
 
             <div v-if="selectedStream && isReadyToPlay" ref="playerContainer" class="relative w-full h-full"
                 @mousemove.passive="handlePlayerMouseMove" @mouseleave="handlePlayerMouseLeave">
-                <div v-show="controlsVisible" class="absolute top-6 left-6 z-60">
+                <div v-show="controlsVisible" class="absolute top-3 left-3 z-60 sm:top-6 sm:left-6">
                     <Button :href="backUrl" variant="secondary" size="sm" class="!rounded-full shadow-lg">
                         <ArrowLeftIcon class="h-5 w-5" />
-                        {{ t('back') }}
+                        <span class="hidden sm:inline">{{ t('back') }}</span>
                     </Button>
                 </div>
 
-                <div v-show="controlsVisible" class="absolute top-6 right-6 z-60">
+                <div v-show="controlsVisible" class="absolute top-3 right-3 z-60 sm:top-6 sm:right-6">
                     <Button type="button" variant="secondary" size="sm" class="!rounded-full shadow-lg"
                         @click="showPanel = !showPanel">
                         <SignalIcon class="h-5 w-5" />
@@ -47,8 +47,8 @@
 
             <WatchDownloadProgress :status="status" v-else-if="selectedStream && !isReadyToPlay" />
 
-            <div v-else class="flex items-center justify-center h-full flex-col gap-4">
-                <p class="text-white text-2xl font-bold">{{ t('no_stream_selected') }}</p>
+            <div v-else class="flex items-center justify-center h-full flex-col gap-4 px-4">
+                <p class="text-white text-lg sm:text-xl md:text-2xl font-bold text-center">{{ t('no_stream_selected') }}</p>
                 <Button type="button" variant="secondary" size="sm" class="!rounded-full shadow-lg"
                     @click="showPanel = true">
                     <SignalIcon class="h-5 w-5" />

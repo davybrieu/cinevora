@@ -11,24 +11,24 @@
                 <div class="hero-gradient absolute inset-0"></div>
                 <div class="hero-gradient-left absolute inset-0"></div>
 
-                <div class="absolute bottom-[18%] left-0 z-10 max-w-2xl px-8 md:bottom-[22%] md:px-16">
+                <div class="absolute bottom-[12%] left-0 z-10 max-w-xl px-4 sm:bottom-[18%] sm:max-w-2xl sm:px-8 md:bottom-[22%] md:px-16">
                     <div class="animate-slide-up">
-                        <MovieInfo :item="activeItem" title-class="text-4xl md:text-6xl leading-tight drop-shadow-lg"
-                            overview-class="line-clamp-3 text-base md:text-lg text-theme-text/90">
-                            <div class="mt-7 flex flex-wrap items-center gap-3">
+                        <MovieInfo :item="activeItem" title-class="text-2xl sm:text-3xl md:text-4xl lg:text-6xl leading-tight drop-shadow-lg"
+                            overview-class="line-clamp-2 text-sm sm:line-clamp-3 sm:text-base md:text-lg text-theme-text/90">
+                            <div class="mt-4 flex flex-wrap items-center gap-2 sm:mt-7 sm:gap-3">
                                 <Link
                                     :href="activeItem.media_type === 'tv' ? route('tv.show', { id: activeItem.id }) : route('movie.show', { id: activeItem.id })"
-                                    class="inline-flex items-center gap-2 rounded bg-theme-accent px-6 py-3 text-base font-bold uppercase tracking-wider text-white shadow-lg transition hover:bg-theme-accent/90 active:bg-theme-accent/80 h-12 min-h-[48px]"
+                                    class="inline-flex items-center gap-2 rounded bg-theme-accent px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-lg transition hover:bg-theme-accent/90 active:bg-theme-accent/80 h-10 min-h-[40px] sm:px-6 sm:py-3 sm:text-base sm:h-12 sm:min-h-[48px]"
                                 >
                                     <InformationCircleIcon class="h-5 w-5" />
                                     {{ t('view_details') }}
                                 </Link>
-                                <div class="h-12 min-h-[48px] flex items-center">
+                                <div class="h-10 min-h-[40px] flex items-center sm:h-12 sm:min-h-[48px]">
                                     <WatchlistButton
                                         :item-id="activeItem.id"
                                         :item-type="activeItem.media_type"
                                         size="md"
-                                        button-class="rounded-full h-12 min-h-[48px] flex items-center justify-center"
+                                        button-class="rounded-full h-10 min-h-[40px] sm:h-12 sm:min-h-[48px] flex items-center justify-center"
                                     />
                                 </div>
                             </div>
@@ -39,13 +39,15 @@
         </Transition>
 
         <!-- Navigation dots -->
-        <div class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2.5">
+        <div class="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2 sm:bottom-8 sm:gap-2.5">
             <button v-for="(item, index) in items" :key="'dot-' + item.id" @click="goTo(index)"
-                class="group relative h-[3px] overflow-hidden rounded-full transition-all duration-500 cursor-pointer"
-                :class="currentIndex === index ? 'w-14 bg-white/40' : 'w-7 bg-white/20 hover:bg-white/30'">
-                <div v-if="currentIndex === index"
-                    class="absolute inset-y-0 left-0 rounded-full bg-white transition-all duration-100 ease-linear"
-                    :style="{ width: progressWidth + '%' }"></div>
+                class="group flex items-center py-3 cursor-pointer">
+                <div class="relative h-[3px] overflow-hidden rounded-full transition-all duration-500"
+                    :class="currentIndex === index ? 'w-10 sm:w-14 bg-white/40' : 'w-5 sm:w-7 bg-white/20 hover:bg-white/30'">
+                    <div v-if="currentIndex === index"
+                        class="absolute inset-y-0 left-0 rounded-full bg-white transition-all duration-100 ease-linear"
+                        :style="{ width: progressWidth + '%' }"></div>
+                </div>
             </button>
         </div>
     </div>

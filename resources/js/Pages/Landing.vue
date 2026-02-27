@@ -3,8 +3,8 @@
         <div class="relative min-h-screen bg-theme-dark flex flex-col">
 
             <!-- Hero -->
-            <div class="relative z-10 flex flex-1 flex-col items-center justify-center px-8 text-center">
-                <h1 class="mb-4 max-w-3xl text-4xl font-black leading-tight text-white md:text-6xl">
+            <div class="relative z-10 flex flex-1 flex-col items-center justify-center px-4 sm:px-8 text-center">
+                <h1 class="mb-4 max-w-3xl text-3xl font-black leading-tight text-white sm:text-4xl md:text-6xl">
                     {{ t('landing_title') }}
                 </h1>
                 <p class="mb-8 max-w-xl text-lg text-theme-text-muted md:text-xl">

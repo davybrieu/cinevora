@@ -4,7 +4,7 @@
     <div class="relative min-h-screen overflow-hidden">
         <div class="pointer-events-none z-10 absolute left-0 top-0 right-0 lg:right-grid-xs block w-full">
             <div
-                class="h-[600px] pt-grid-xs lg:pt-0 pr-0 w-full flex items-center justify-center lg:pr-grid-xs lg:rounded-xl ring-1 ring-theme-accent/10 ring-inset relative">
+                class="h-[350px] sm:h-[450px] lg:h-[600px] pt-grid-xs lg:pt-0 pr-0 w-full flex items-center justify-center lg:pr-grid-xs lg:rounded-xl ring-1 ring-theme-accent/10 ring-inset relative">
                 <div class="absolute inset-0 lg:rounded-xl opacity-15 pointer-events-none overflow-hidden">
                     <div class="w-full h-full bg-center bg-theme-accent"></div>
                 </div>

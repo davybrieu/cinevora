@@ -7,7 +7,7 @@
         </div>
 
         <div class="relative z-10 mt-14 pb-8">
-            <SectionTitle :title="t('streaming_providers')" class="px-8 md:px-16" />
+            <SectionTitle :title="t('streaming_providers')" class="px-4 sm:px-8 md:px-16" />
             <ProviderFilter :providers="providers" :current-provider="currentProvider" />
         </div>
 

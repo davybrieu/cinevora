@@ -1,6 +1,7 @@
 <template>
+    <PubPremium />
     <footer class="border-t border-white/10 text-white/60 leading-relaxed">
-        <div class="px-8 md:px-16 py-8 pb-5">
+        <div class="px-4 sm:px-8 md:px-16 py-8 pb-5">
             <div class="mb-8 flex flex-col">
                 <div class="max-w-3xl">
                     <div class="text-xl text-white font-semibold mb-4">Disclaimer</div>
@@ -40,6 +41,7 @@ import { Link } from '@inertiajs/vue3';
 import { useTranslation } from '../Composables/useTranslation.js';
 import { usePage } from '@inertiajs/vue3';
 import { HeartIcon } from '@heroicons/vue/24/solid';
+import PubPremium from './PubPremium.vue';
 const { t } = useTranslation();
 
 const page = usePage();

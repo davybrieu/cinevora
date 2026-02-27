@@ -1,7 +1,7 @@
 <template>
     <AppLayout :title="item.title">
         <!-- Hero backdrop en fond, hauteur conservée -->
-        <div class="absolute top-0 left-0 w-full h-[80vh] overflow-hidden z-0">
+        <div class="absolute top-0 left-0 w-full h-[55vh] sm:h-[65vh] md:h-[80vh] overflow-hidden z-0">
             <img v-if="item.backdrop_path" :src="item.backdrop_path" :alt="item.title"
                 class="h-full w-full object-cover pointer-events-none" loading="lazy" />
             <div class="hero-gradient absolute inset-0"></div>
@@ -9,10 +9,10 @@
         </div>
 
         <!-- Main info collé en bas du backdrop sur l'image -->
-        <div class="relative z-10 flex items-end h-[80vh]">
-            <div class="w-full px-8 md:px-16 pb-8">
-                <div class="flex flex-col gap-8 md:flex-row">
-                    <div class="w-48 flex-shrink-0 md:w-64">
+        <div class="relative z-10 flex items-end h-[55vh] sm:h-[65vh] md:h-[80vh]">
+            <div class="w-full px-4 sm:px-8 md:px-16 pb-6 sm:pb-8">
+                <div class="flex flex-col gap-4 sm:gap-6 md:gap-8 md:flex-row">
+                    <div class="hidden sm:block w-36 flex-shrink-0 sm:w-40 md:w-48 lg:w-64">
                         <PosterImage :src="item.poster_path" :alt="item.title" class="aspect-[2/3] w-full shadow-2xl" />
                     </div>
 
@@ -41,7 +41,7 @@
         <div class="space-y-12 mb-12">
 
             <!-- Saisons/Episodes -->
-            <section class="px-8 md:px-16" v-if="item.media_type === 'tv' && item.seasons?.length">
+            <section class="px-4 sm:px-8 md:px-16" v-if="item.media_type === 'tv' && item.seasons?.length">
                 <div class="flex flex-col gap-4 mb-6">
                     <SectionTitle :title="t('seasons')" class="mb-0" />
                     <select v-model="selectedSeason" @change="loadEpisodes"
@@ -61,8 +61,8 @@
                     <div v-else class="space-y-4">
                         <Link v-for="(ep, index) in episodes" :key="ep.id"
                             :href="route('watch.tv', { id: item.id, season: ep.season_number, episode: ep.episode_number })"
-                            class="flex gap-4 rounded-lg p-3 transition-colors hover:bg-white/5">
-                            <div class="relative h-20 w-[140px] flex-shrink-0 overflow-hidden rounded-md bg-white/10">
+                            class="flex gap-3 sm:gap-4 rounded-lg p-2 sm:p-3 transition-colors hover:bg-white/5">
+                            <div class="relative h-16 w-[100px] flex-shrink-0 overflow-hidden rounded-md bg-white/10 sm:h-20 sm:w-[140px]">
                                 <img v-if="ep.still_path" :src="ep.still_path" :alt="ep.name"
                                     class="h-full w-full object-cover" loading="lazy" />
                                 <div v-else class="flex h-full items-center justify-center text-white/30">
@@ -87,7 +87,7 @@
             </section>
 
             <!-- Details -->
-            <section class="px-8 md:px-16">
+            <section class="px-4 sm:px-8 md:px-16">
                 <SectionTitle :title="t('details')" />
                 <Card>
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-8 gap-y-4">
@@ -176,7 +176,7 @@
             <CastRow :title="t('cast')" :count="item.cast.length" :cast="item.cast" />
 
             <!-- Crew -->
-            <section v-if="item.crew.length" class="px-8 md:px-16">
+            <section v-if="item.crew.length" class="px-4 sm:px-8 md:px-16">
                 <SectionTitle :title="t('crew')" :count="item.crew.length" />
                 <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
                     <div v-for="(members, job) in crewByJob" :key="job">
@@ -200,28 +200,28 @@
 
             <!-- Videos -->
             <section v-if="item.videos.length">
-                <SectionTitle :title="t('videos')" :count="item.videos.length" class="px-8 md:px-16" />
+                <SectionTitle :title="t('videos')" :count="item.videos.length" class="px-4 sm:px-8 md:px-16" />
                 <VideoGallery ref="videoGalleryRef" :videos="item.videos" />
             </section>
 
             <section v-if="item.backdrops.length || item.posters.length">
                 <SectionTitle :title="t('images')" :count="item.backdrops.length + item.posters.length"
-                    class="px-8 md:px-16" />
+                    class="px-4 sm:px-8 md:px-16" />
 
                 <div class="flex flex-col gap-6">
                     <div v-if="item.backdrops.length">
-                        <SectionSubTitle :title="t('backdrops')" :count="item.backdrops.length" class="px-8 md:px-16" />
+                        <SectionSubTitle :title="t('backdrops')" :count="item.backdrops.length" class="px-4 sm:px-8 md:px-16" />
                         <ImageGallery :images="item.backdrops" type="backdrops" key-prefix="bd" />
                     </div>
                     <div v-if="item.posters.length">
-                        <SectionSubTitle :title="t('posters')" :count="item.posters.length" class="px-8 md:px-16" />
+                        <SectionSubTitle :title="t('posters')" :count="item.posters.length" class="px-4 sm:px-8 md:px-16" />
                         <ImageGallery :images="item.posters" type="posters" key-prefix="ps" />
                     </div>
                 </div>
             </section>
 
             <!-- Reviews -->
-            <section v-if="item.reviews.length" class="px-8 md:px-16">
+            <section v-if="item.reviews.length" class="px-4 sm:px-8 md:px-16">
                 <SectionTitle :title="t('reviews')" :count="item.reviews.length" />
                 <div class="space-y-4">
                     <ReviewCard v-for="review in item.reviews" :key="review.id" :review="review" />
@@ -229,7 +229,7 @@
             </section>
 
             <!-- Where to watch -->
-            <section v-if="hasProviders" class="px-8 md:px-16">
+            <section v-if="hasProviders" class="px-4 sm:px-8 md:px-16">
                 <SectionTitle :title="t('where_to_watch')" />
                 <Card>
                     <div class="space-y-6">

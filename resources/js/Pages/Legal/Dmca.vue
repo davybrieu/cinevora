@@ -1,6 +1,6 @@
 <template>
     <AppLayout :title="t('dmca')" :description="t('page_header_dmca_desc')">
-        <div class="mx-auto max-w-3xl px-8 pb-20 pt-10 md:px-16">
+        <div class="mx-auto max-w-3xl px-4 pb-20 pt-10 sm:px-8 md:px-16">
             <Card>
                 <div class="space-y-6 text-sm leading-relaxed text-white/60">
                     <section v-for="key in ['intro', 'notice', 'counter', 'contact']" :key="key">

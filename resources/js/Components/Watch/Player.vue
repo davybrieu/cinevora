@@ -14,7 +14,7 @@
         </transition>
     </div>
 
-    <div v-show="controlsVisible" class="player-controls absolute inset-x-0 bottom-0 z-30 px-5 pb-5">
+    <div v-show="controlsVisible" class="player-controls absolute inset-x-0 bottom-0 z-30 px-3 pb-3 sm:px-5 sm:pb-5">
         <div class="flex items-center justify-between mb-3 min-h-8">
             <Transition name="fade">
                 <button v-if="showSkipNow" type="button"
@@ -25,65 +25,67 @@
             </Transition>
         </div>
 
-        <div class="flex items-center gap-2 font-semibold text-white text-2xl mb-4" v-if="pageTitle">
+        <div class="flex items-center gap-2 font-semibold text-white text-base sm:text-lg md:text-2xl mb-2 sm:mb-4" v-if="pageTitle">
             {{ pageTitle }}
         </div>
 
         <PlayerTimeline :current-time="currentTime" :duration="duration" @seek="handleSeekByRatio" />
 
-        <div class="flex items-center text-white justify-between w-full">
-            <div class="flex items-center gap-2">
+        <div class="flex items-center text-white justify-between w-full gap-1 sm:gap-0">
+            <div class="flex items-center gap-1 sm:gap-2 min-w-0">
                 <WatchButton type="button"
-                    class="!h-10 !w-10 !rounded-full !bg-theme-accent/90 hover:!bg-theme-accent-hover !text-black transition-all duration-200 shadow-md shadow-theme-accent/20"
+                    class="!h-9 !w-9 sm:!h-10 sm:!w-10 !rounded-full !bg-theme-accent/90 hover:!bg-theme-accent-hover !text-black transition-all duration-200 shadow-md shadow-theme-accent/20"
                     @click="togglePlayPause">
-                    <PlayIcon v-if="!isPlaying" class="h-5 w-5" />
-                    <PauseIcon v-else class="h-5 w-5" />
+                    <PlayIcon v-if="!isPlaying" class="h-4 w-4 sm:h-5 sm:w-5" />
+                    <PauseIcon v-else class="h-4 w-4 sm:h-5 sm:w-5" />
                 </WatchButton>
 
                 <div class="mx-2 hidden h-6 w-px bg-white/10 sm:block"></div>
 
-                <WatchButton type="button" @click="seekBy(-10)" title="Seek -10">
+                <WatchButton type="button" class="hidden sm:flex" @click="seekBy(-10)" title="Seek -10">
                     <BackwardIcon class="h-5 w-5" />
                 </WatchButton>
 
-                <WatchButton type="button" @click="seekBy(10)" title="Seek +10">
+                <WatchButton type="button" class="hidden sm:flex" @click="seekBy(10)" title="Seek +10">
                     <ForwardIcon class="h-5 w-5" />
                 </WatchButton>
 
                 <div class="mx-2 hidden h-6 w-px bg-white/10 sm:block"></div>
 
-                <PlayerVolumeControl :is-muted="isMuted" :volume="volume" @toggle-mute="toggleMute"
-                    @set-volume="setVolumeByRatio" />
+                <div class="hidden sm:flex">
+                    <PlayerVolumeControl :is-muted="isMuted" :volume="volume" @toggle-mute="toggleMute"
+                        @set-volume="setVolumeByRatio" />
+                </div>
 
                 <div class="mx-2 hidden h-6 w-px bg-white/10 sm:block"></div>
 
-                <div class="text-xs tabular-nums text-white/60 min-w-24 px-1">
+                <div class="text-[10px] sm:text-xs tabular-nums text-white/60 min-w-0 sm:min-w-24 px-1">
                     <span class="text-white/90">{{ formattedCurrentTime }}</span>
-                    <span class="mx-1 text-white/30">/</span>
+                    <span class="mx-0.5 sm:mx-1 text-white/30">/</span>
                     <span>{{ formattedDuration }}</span>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2">
-                <WatchButton type="button" @click="showSpeedPanel = true" title="Playback speed">
+            <div class="flex items-center gap-1 sm:gap-2">
+                <WatchButton type="button" class="hidden sm:flex" @click="showSpeedPanel = true" title="Playback speed">
                     <ClockIcon class="h-5 w-5" />
                 </WatchButton>
-                <WatchButton type="button" @click="showAudioPanel = true" title="Audio tracks">
+                <WatchButton type="button" class="hidden sm:flex" @click="showAudioPanel = true" title="Audio tracks">
                     <MusicalNoteIcon class="h-5 w-5" />
                 </WatchButton>
-                <WatchButton type="button" @click="showCastPanel = true" title="Cast">
+                <WatchButton type="button" class="hidden sm:flex" @click="showCastPanel = true" title="Cast">
                     <TvIcon class="h-5 w-5" />
                 </WatchButton>
 
                 <div class="mx-2 hidden h-6 w-px bg-white/10 sm:block"></div>
 
-                <WatchButton type="button" class="disabled:opacity-40 disabled:cursor-not-allowed"
+                <WatchButton type="button" class="hidden sm:flex disabled:opacity-40 disabled:cursor-not-allowed"
                     :disabled="!pipSupported" @click="togglePip" :title="t('pip')">
                     <RectangleStackIcon class="h-5 w-5" />
                 </WatchButton>
                 <WatchButton type="button" @click="toggleFullscreen" :title="t('fullscreen')">
-                    <ArrowsPointingOutIcon v-if="!isFullscreen" class="h-5 w-5" />
-                    <ArrowsPointingInIcon v-else class="h-5 w-5" />
+                    <ArrowsPointingOutIcon v-if="!isFullscreen" class="h-4 w-4 sm:h-5 sm:w-5" />
+                    <ArrowsPointingInIcon v-else class="h-4 w-4 sm:h-5 sm:w-5" />
                 </WatchButton>
             </div>
         </div>

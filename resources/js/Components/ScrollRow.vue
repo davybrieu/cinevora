@@ -6,7 +6,7 @@
         </button>
 
         <div ref="scrollContainer"
-            class="scrollbar-hide select-none flex overflow-x-auto px-8 md:px-16"
+            class="scrollbar-hide select-none flex overflow-x-auto px-4 sm:px-8 md:px-16"
             :class="[gapClass, { 'cursor-grab': !isDragging, 'cursor-grabbing': isDragging, 'scroll-smooth': !isDragging }]"
             @scroll="updateScrollState" @mousedown="onDragStart" @mousemove="onDragMove"
             @mouseup="onDragEnd" @mouseleave="onDragEnd" @dragstart.prevent @selectstart.prevent>

@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-2 gap-2 px-8 md:grid-cols-4 md:gap-4 md:px-16 lg:grid-cols-7">
+    <div class="grid grid-cols-2 gap-2 px-4 sm:px-8 sm:grid-cols-3 md:grid-cols-4 md:gap-4 md:px-16 lg:grid-cols-7">
         <Link v-for="provider in providers" :key="provider.id" :href="provider.id && currentProvider === provider.id
             ? route('home')
             : (provider.id ? route('home', { provider: provider.id }) : route('home'))"
