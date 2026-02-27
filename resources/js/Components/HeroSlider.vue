@@ -4,56 +4,42 @@
         @mousedown="onDragStart" @mousemove="onDragMove" @mouseup="onDragEnd" @mouseleave="onDragEnd"
         @touchstart.passive="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd"
         @click.capture="(e) => { if (wasDragged) { e.preventDefault(); e.stopPropagation(); } }">
-        <div v-for="(item, index) in items" :key="item.id" class="absolute inset-0 transition-opacity duration-1000"
-            :class="currentIndex === index ? 'opacity-100 z-[1]' : 'opacity-0 z-0'">
-            <img v-if="item.backdrop_path" :src="item.backdrop_path" :alt="item.title"
-                class="h-full w-full object-cover pointer-events-none" loading="lazy" />
-            <div class="hero-gradient absolute inset-0"></div>
-            <div class="hero-gradient-left absolute inset-0"></div>
+        <Transition :name="slideDirection === 'prev' ? 'hero-slide-right' : 'hero-slide-left'">
+            <div v-if="activeItem" :key="activeItem.id" class="absolute inset-0 z-[1]">
+                <img v-if="activeItem.backdrop_path" :src="activeItem.backdrop_path" :alt="activeItem.title"
+                    class="h-full w-full object-cover pointer-events-none" loading="lazy" />
+                <div class="hero-gradient absolute inset-0"></div>
+                <div class="hero-gradient-left absolute inset-0"></div>
 
-            <div class="absolute bottom-[18%] left-0 z-10 max-w-2xl px-8 md:bottom-[22%] md:px-16">
-                <div v-if="currentIndex === index" class="animate-slide-up">
-                    <MovieInfo :item="item" title-class="text-4xl md:text-6xl leading-tight drop-shadow-lg"
-                        overview-class="line-clamp-3 text-base md:text-lg text-theme-text/90">
-                        <div class="mt-7 flex flex-wrap items-center gap-3">
-                            <Link
-                                :href="item.media_type === 'tv' ? route('tv.show', { id: item.id }) : route('movie.show', { id: item.id })"
-                                class="inline-flex items-center gap-2 rounded bg-theme-accent px-6 py-3 text-base font-bold uppercase tracking-wider text-white shadow-lg transition hover:bg-theme-accent/90 active:bg-theme-accent/80 h-12 min-h-[48px]"
-                            >
-                                <InformationCircleIcon class="h-5 w-5" />
-                                {{ t('view_details') }}
-                            </Link>
-                            <div class="h-12 min-h-[48px] flex items-center">
-                                <WatchlistButton
-                                    :item-id="item.id"
-                                    :item-type="item.media_type"
-                                    size="md"
-                                    button-class="rounded-full h-12 min-h-[48px] flex items-center justify-center"
-                                />
+                <div class="absolute bottom-[18%] left-0 z-10 max-w-2xl px-8 md:bottom-[22%] md:px-16">
+                    <div class="animate-slide-up">
+                        <MovieInfo :item="activeItem" title-class="text-4xl md:text-6xl leading-tight drop-shadow-lg"
+                            overview-class="line-clamp-3 text-base md:text-lg text-theme-text/90">
+                            <div class="mt-7 flex flex-wrap items-center gap-3">
+                                <Link
+                                    :href="activeItem.media_type === 'tv' ? route('tv.show', { id: activeItem.id }) : route('movie.show', { id: activeItem.id })"
+                                    class="inline-flex items-center gap-2 rounded bg-theme-accent px-6 py-3 text-base font-bold uppercase tracking-wider text-white shadow-lg transition hover:bg-theme-accent/90 active:bg-theme-accent/80 h-12 min-h-[48px]"
+                                >
+                                    <InformationCircleIcon class="h-5 w-5" />
+                                    {{ t('view_details') }}
+                                </Link>
+                                <div class="h-12 min-h-[48px] flex items-center">
+                                    <WatchlistButton
+                                        :item-id="activeItem.id"
+                                        :item-type="activeItem.media_type"
+                                        size="md"
+                                        button-class="rounded-full h-12 min-h-[48px] flex items-center justify-center"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    </MovieInfo>
+                        </MovieInfo>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Navigation controls -->
-        <div class="absolute bottom-8 right-8 z-20 flex items-center gap-4 md:right-16">
-            <!-- Arrow buttons -->
-            <div v-if="items.length > 1" class="flex items-center gap-1">
-                <button @click="prev"
-                    class="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-all hover:bg-white/10 hover:border-white/40 cursor-pointer">
-                    <ChevronLeftIcon class="h-5 w-5" />
-                </button>
-                <button @click="next"
-                    class="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-all hover:bg-white/10 hover:border-white/40 cursor-pointer">
-                    <ChevronRightIcon class="h-5 w-5" />
-                </button>
-            </div>
-        </div>
+        </Transition>
 
         <!-- Navigation dots -->
-        <div class="absolute bottom-8 left-8 z-20 flex gap-2.5 md:left-16">
+        <div class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2.5">
             <button v-for="(item, index) in items" :key="'dot-' + item.id" @click="goTo(index)"
                 class="group relative h-[3px] overflow-hidden rounded-full transition-all duration-500 cursor-pointer"
                 :class="currentIndex === index ? 'w-14 bg-white/40' : 'w-7 bg-white/20 hover:bg-white/30'">
@@ -69,7 +55,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import { useTranslation } from '../Composables/useTranslation.js';
-import { InformationCircleIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
+import { InformationCircleIcon } from '@heroicons/vue/24/outline';
 import MovieInfo from './MovieInfo.vue';
 import WatchlistButton from './WatchlistButton.vue';
 
@@ -83,6 +69,7 @@ const currentIndex = ref(0);
 const progress = ref(0);
 const isDragging = ref(false);
 const wasDragged = ref(false);
+const slideDirection = ref('next');
 
 const SLIDE_DURATION = 7000;
 const TICK = 50;
@@ -94,18 +81,23 @@ let dragStartX = 0;
 let dragCurrentX = 0;
 
 const progressWidth = computed(() => Math.min((progress.value / SLIDE_DURATION) * 100, 100));
+const activeItem = computed(() => props.items[currentIndex.value] ?? null);
 
 function goTo(index) {
+    if (index === currentIndex.value) return;
+    slideDirection.value = index > currentIndex.value ? 'next' : 'prev';
     currentIndex.value = index;
     resetTimers();
 }
 
 function prev() {
+    slideDirection.value = 'prev';
     currentIndex.value = (currentIndex.value - 1 + props.items.length) % props.items.length;
     resetTimers();
 }
 
 function next() {
+    slideDirection.value = 'next';
     currentIndex.value = (currentIndex.value + 1) % props.items.length;
     resetTimers();
 }
@@ -188,3 +180,54 @@ onUnmounted(() => {
     clearInterval(progressTimer);
 });
 </script>
+
+<style scoped>
+.hero-slide-left-enter-active,
+.hero-slide-left-leave-active,
+.hero-slide-right-enter-active,
+.hero-slide-right-leave-active {
+    transition: transform 0.7s ease;
+}
+
+.hero-slide-left-enter-active,
+.hero-slide-right-enter-active {
+    z-index: 2;
+}
+
+.hero-slide-left-leave-active,
+.hero-slide-right-leave-active {
+    z-index: 1;
+}
+
+.hero-slide-left-enter-from {
+    transform: translateX(100%);
+}
+
+.hero-slide-left-enter-to {
+    transform: translateX(0);
+}
+
+.hero-slide-left-leave-from {
+    transform: translateX(0);
+}
+
+.hero-slide-left-leave-to {
+    transform: translateX(-100%);
+}
+
+.hero-slide-right-enter-from {
+    transform: translateX(-100%);
+}
+
+.hero-slide-right-enter-to {
+    transform: translateX(0);
+}
+
+.hero-slide-right-leave-from {
+    transform: translateX(0);
+}
+
+.hero-slide-right-leave-to {
+    transform: translateX(100%);
+}
+</style>

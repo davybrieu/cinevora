@@ -16,6 +16,10 @@
     --color-scheme: dark;
 }
 
+a:hover {
+    @apply text-theme-accent-hover transition-colors duration-200;
+}
+
 html {
     scrollbar-width: thin;
     scrollbar-color: #333 #141414;
@@ -88,10 +92,9 @@ body {
 .hero-gradient {
     background: linear-gradient(
         to top,
-        #141414 0%,
-        rgba(20, 20, 20, 0.85) 12%,
-        rgba(20, 20, 20, 0.5) 28%,
-        rgba(20, 20, 20, 0.1) 50%,
+        var(--color-theme-dark) 0%,
+        var(--color-theme-dark) 5%,
+        var(--color-theme-dark) 10%,
         transparent 100%
     );
 }
@@ -99,9 +102,9 @@ body {
 .hero-gradient-left {
     background: linear-gradient(
         to right,
-        rgba(20, 20, 20, 0.95) 0%,
-        rgba(20, 20, 20, 0.7) 25%,
-        rgba(20, 20, 20, 0.2) 50%,
+        var(--color-theme-dark) 0%,
+        var(--color-theme-dark) 5%,
+        var(--color-theme-dark) 10%,
         transparent 70%
     );
 }
