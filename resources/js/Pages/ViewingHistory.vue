@@ -48,7 +48,7 @@
                             </div>
                             <div class="space-y-2">
                                 <Card v-for="entry in group.entries" :key="entry.id"
-                                    class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/[0.03] p-4">
+                                    class="flex flex-wrap items-center justify-between gap-3">
                                     <div class="min-w-0 flex-1">
                                         <p class="font-medium text-white">{{ entry.title }}</p>
                                         <p class="mt-0.5 flex items-center gap-1 text-sm"

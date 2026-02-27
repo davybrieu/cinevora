@@ -1,23 +1,13 @@
 @import 'tailwindcss';
 @import './fonts.css';
 
-::root,
-:root {
-    --color-scheme: dark;
-}
-
 @theme {
     --color-theme-dark: #010906;
-    --color-theme-darker: #0a0a0a;
+    --color-theme-darker: #010a06;
     --color-theme-accent: #10b981;
     --color-theme-accent-hover: #34d399;
     --color-theme-text: #e5e5e5;
     --color-theme-text-muted: #8c8c8c;
-    --color-scheme: dark;
-}
-
-a:hover {
-    @apply text-theme-accent-hover transition-colors duration-200;
 }
 
 html {

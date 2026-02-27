@@ -3,20 +3,12 @@
         <div @click="toggle" class="cursor-pointer">
             <slot name="trigger" :open="isOpen" />
         </div>
-        <Transition
-            enter-active-class="transition duration-150"
-            enter-from-class="opacity-0 scale-95"
-            enter-to-class="opacity-100 scale-100"
-            leave-active-class="transition duration-100"
-            leave-from-class="opacity-100 scale-100"
-            leave-to-class="opacity-0 scale-95"
-        >
-            <div
-                v-if="isOpen"
-                class="absolute z-50 mt-2 min-w-[120px] overflow-hidden rounded-lg bg-theme-darker/95 shadow-2xl ring-1 ring-white/10 backdrop-blur-md"
-                :class="align === 'right' ? 'right-0' : 'left-0'"
-                :style="panelStyle"
-            >
+        <Transition enter-active-class="transition duration-150" enter-from-class="opacity-0 scale-95"
+            enter-to-class="opacity-100 scale-100" leave-active-class="transition duration-100"
+            leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
+            <div v-if="isOpen"
+                class="absolute z-50 mt-2 min-w-[120px] overflow-hidden rounded-lg bg-theme-darker shadow-2xl ring-1 ring-white/10 backdrop-blur-md"
+                :class="align === 'right' ? 'right-0' : 'left-0'" :style="panelStyle">
                 <slot :close="close" />
             </div>
         </Transition>
