@@ -7,12 +7,9 @@ import Button from './Button.vue';
 <template>
     <div
         class="w-full flex items-center bg-theme-accent/10 justify-between flex-col sm:flex-row px-8 lg:px-14 2xl:px-[6.5rem] gap-6 py-14  relative border-y border-y-theme-accent/10">
-        <div class="absolute left-0 hidden sm:block w-1/3 bg-theme-accent/10 z-10 top-0 bottom-0"></div>
-        <div
-            class="absolute left-1/3 hidden sm:block bg-gradient-to-l from-transparent to-theme-accent/10 z-10 top-0 bottom-0 right-0">
-        </div>
+        <div class="absolute inset-0 pub-premium-overlay z-10 pointer-events-none"></div>
         <video
-            class="absolute w-full opacity-10 sm:opacity-50 left-0 sm:left-1/3 top-0 bottom-0 w-safe-x-screen object-cover h-full z-1"
+            class="absolute inset-0 w-full h-full object-cover opacity-20 sm:opacity-50 z-0"
             autoplay muted loop playsinline>
             <source src="/images/max.mp4" type="video/mp4">
         </video>
