@@ -1,40 +1,38 @@
 <template>
     <AppLayout :title="t('catalog')" :description="t('page_header_browse_desc')">
-        <div class="min-h-screen px-8 pb-20 pt-10 md:px-16">
-            <div class="flex flex-col gap-6">
-                <aside class="browse-aside w-full shrink-0">
-                    <div class="browse-aside-panel rounded-xl border border-white/10 overflow-hidden">
-                        <!-- Header -->
-                        <div class="flex items-center justify-between px-5 py-4">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-theme-accent/15 ring-1 ring-theme-accent/20">
-                                    <FunnelIcon class="h-5 w-5 text-theme-accent" />
-                                </div>
-                                <div>
-                                    <h2 class="text-base font-semibold tracking-tight text-white">{{ t('browse_filters')
+        <div class="px-8 pb-20 pt-10 md:px-16">
+            <div class="mb-8 flex flex-wrap justify-end gap-2">
+                <div class="browse-aside-panel rounded-xl border border-white/10 overflow-hidden">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-5 py-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="flex h-10 w-10 items-center justify-center rounded-xl bg-theme-accent/15 ring-1 ring-theme-accent/20">
+                                <FunnelIcon class="h-5 w-5 text-theme-accent" />
+                            </div>
+                            <div>
+                                <h2 class="text-base font-semibold tracking-tight text-white">{{ t('browse_filters')
                                     }}</h2>
-                                    <p class="text-xs text-white/45 mt-0.5">{{ t('catalog') }}</p>
-                                </div>
+                                <p class="text-xs text-white/45 mt-0.5">{{ t('catalog') }}</p>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="px-4">
-                            <!-- Clear all -->
-                            <div v-if="hasActiveFilters" class="mb-4">
-                                <Button variant="secondary" size="sm" class="w-full" @click="clearAllFilters">
-                                    <XMarkIcon class="h-3.5 w-3.5" />
-                                    {{ t('browse_clear_all') }}
-                                </Button>
-                            </div>
+                    <div class="px-4">
+                        <!-- Clear all -->
+                        <div v-if="hasActiveFilters" class="mb-4">
+                            <Button variant="secondary" size="sm" class="w-full" @click="clearAllFilters">
+                                <XMarkIcon class="h-3.5 w-3.5" />
+                                {{ t('browse_clear_all') }}
+                            </Button>
+                        </div>
 
-                            <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
-                                <!-- Search -->
-                                <FilterSection v-model:open="openSections.search" :title="t('browse_search')"
-                                    icon="search">
-                                    <InputGroup id="browse-query" v-model="form.query" type="text"
-                                        :placeholder="t('search_placeholder')" @update:modelValue="scheduleApply" />
-                                </FilterSection>
+                        <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+                            <!-- Search -->
+                            <FilterSection v-model:open="openSections.search" :title="t('browse_search')" icon="search">
+                                <InputGroup id="browse-query" v-model="form.query" type="text"
+                                    :placeholder="t('search_placeholder')" @update:modelValue="scheduleApply" />
+                            </FilterSection>
 
                             <!-- Type -->
                             <FilterSection v-model:open="openSections.type" :title="t('browse_type')" icon="type">
@@ -109,27 +107,25 @@
                                 </div>
                             </FilterSection>
 
-                                <!-- Vote count -->
-                                <FilterSection v-model:open="openSections.votes" :title="t('browse_vote_count_min')"
-                                    icon="votes">
-                                    <div class="space-y-2 pt-0.5">
-                                        <input v-model.number="form.vote_count_min" type="range" min="0" max="500"
-                                            step="50"
-                                            class="browse-range h-2 w-full appearance-none rounded-full bg-white/10 accent-theme-accent"
-                                            @input="scheduleApply" />
-                                        <div class="flex justify-between text-xs text-white/40">
-                                            <span>0</span>
-                                            <span class="text-theme-accent font-semibold">
-                                                {{ (form.vote_count_min || 0) + '+' }}
-                                            </span>
-                                            <span>500</span>
-                                        </div>
+                            <!-- Vote count -->
+                            <FilterSection v-model:open="openSections.votes" :title="t('browse_vote_count_min')"
+                                icon="votes">
+                                <div class="space-y-2 pt-0.5">
+                                    <input v-model.number="form.vote_count_min" type="range" min="0" max="500" step="50"
+                                        class="browse-range h-2 w-full appearance-none rounded-full bg-white/10 accent-theme-accent"
+                                        @input="scheduleApply" />
+                                    <div class="flex justify-between text-xs text-white/40">
+                                        <span>0</span>
+                                        <span class="text-theme-accent font-semibold">
+                                            {{ (form.vote_count_min || 0) + '+' }}
+                                        </span>
+                                        <span>500</span>
                                     </div>
-                                </FilterSection>
-                            </div>
+                                </div>
+                            </FilterSection>
                         </div>
                     </div>
-                </aside>
+                </div>
 
                 <!-- Results -->
                 <div
