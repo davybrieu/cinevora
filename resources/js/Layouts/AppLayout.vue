@@ -18,6 +18,7 @@
             <PageHeader v-if="description && title" :title="title" :description="description" />
             <slot />
             <Footer v-if="footer" />
+            <ScrollToTop />
         </div>
     </div>
 </template>
@@ -26,6 +27,7 @@
 import Navbar from '@/Components/Navbar.vue';
 import Footer from '@/Components/Footer.vue';
 import PageHeader from '@/Components/PageHeader.vue';
+import ScrollToTop from '@/Components/ScrollToTop.vue';
 import { Head } from '@inertiajs/vue3';
 import Toast from '@/Components/Toast.vue';
 
