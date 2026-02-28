@@ -17,15 +17,12 @@
                         <span v-if="person.place_of_birth">{{ person.place_of_birth }}</span>
                     </div>
 
-                    <p v-if="person.biography" class="max-w-3xl leading-relaxed text-theme-text"
-                        :class="{ 'line-clamp-6': !bioExpanded }">
-                        {{ person.biography }}
-                    </p>
-                    <button v-if="person.biography && person.biography.length > 400" type="button"
-                        class="cursor-pointer mt-2 text-sm text-theme-accent hover:underline"
-                        @click="bioExpanded = !bioExpanded">
-                        {{ bioExpanded ? t('show_less') : t('show_more_bio') }}
-                    </button>
+                    <ExpandableText
+                        v-if="person.biography"
+                        :text="person.biography"
+                        text-class="max-w-3xl text-theme-text"
+                        :line-clamp="6"
+                    />
                 </div>
             </div>
         </div>
@@ -57,7 +54,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useTranslation } from '../Composables/useTranslation.js';
 import AppLayout from '../Layouts/AppLayout.vue';
 import Badge from '../Components/Badge.vue';
@@ -65,6 +61,7 @@ import SectionTitle from '../Components/SectionTitle.vue';
 import PosterImage from '../Components/PosterImage.vue';
 import ImageGallery from '../Components/ImageGallery.vue';
 import MovieRow from '../Components/MovieRow.vue';
+import ExpandableText from '../Components/ExpandableText.vue';
 
 const { t } = useTranslation();
 
@@ -72,5 +69,4 @@ defineProps({
     person: { type: Object, required: true },
 });
 
-const bioExpanded = ref(false);
 </script>

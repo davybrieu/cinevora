@@ -1,7 +1,7 @@
 <template>
     <AppLayout :title="item.title">
-        <!-- Hero backdrop en fond, hauteur conservée -->
-        <div class="absolute top-0 left-0 w-full h-[55vh] sm:h-[65vh] md:h-[80vh] overflow-hidden z-0">
+        <!-- Hero backdrop en fond, hauteur fixée en pixels -->
+        <div class="absolute top-0 left-0 w-full h-[340px] sm:h-[420px] md:h-[600px] overflow-hidden z-0">
             <img v-if="item.backdrop_path" :src="item.backdrop_path" :alt="item.title"
                 class="h-full w-full object-cover pointer-events-none" loading="lazy" />
             <div class="hero-gradient absolute inset-0"></div>
@@ -9,10 +9,10 @@
         </div>
 
         <!-- Main info collé en bas du backdrop sur l'image -->
-        <div class="relative z-10 flex items-end h-[55vh] sm:h-[65vh] md:h-[80vh]">
+        <div class="relative z-10 flex items-end pt-30">
             <div class="w-full px-4 sm:px-8 md:px-16 pb-6 sm:pb-8">
                 <div class="flex flex-col gap-4 sm:gap-6 md:gap-8 md:flex-row">
-                    <div class="hidden sm:block w-36 flex-shrink-0 sm:w-40 md:w-48 lg:w-64">
+                    <div class="hidden sm:block w-36 flex-shrink-0 sm:w-60 md:w-72 lg:w-84">
                         <PosterImage :src="item.poster_path" :alt="item.title" class="aspect-[2/3] w-full shadow-2xl" />
                     </div>
 
@@ -67,7 +67,8 @@
                         <Link v-for="(ep, index) in episodes" :key="ep.id"
                             :href="route('watch.tv', { id: item.id, season: ep.season_number, episode: ep.episode_number })"
                             class="flex gap-3 sm:gap-4 rounded-lg p-2 sm:p-3 transition-colors hover:bg-white/5">
-                            <div class="relative h-16 w-[100px] flex-shrink-0 overflow-hidden rounded-md bg-white/10 sm:h-20 sm:w-[140px]">
+                            <div
+                                class="relative h-16 w-[100px] flex-shrink-0 overflow-hidden rounded-md bg-white/10 sm:h-20 sm:w-[140px]">
                                 <img v-if="ep.still_path" :src="ep.still_path" :alt="ep.name"
                                     class="h-full w-full object-cover" loading="lazy" />
                                 <div v-else class="flex h-full items-center justify-center text-white/30">
@@ -215,11 +216,13 @@
 
                 <div class="flex flex-col gap-6">
                     <div v-if="item.backdrops.length">
-                        <SectionSubTitle :title="t('backdrops')" :count="item.backdrops.length" class="px-4 sm:px-8 md:px-16" />
+                        <SectionSubTitle :title="t('backdrops')" :count="item.backdrops.length"
+                            class="px-4 sm:px-8 md:px-16" />
                         <ImageGallery :images="item.backdrops" type="backdrops" key-prefix="bd" />
                     </div>
                     <div v-if="item.posters.length">
-                        <SectionSubTitle :title="t('posters')" :count="item.posters.length" class="px-4 sm:px-8 md:px-16" />
+                        <SectionSubTitle :title="t('posters')" :count="item.posters.length"
+                            class="px-4 sm:px-8 md:px-16" />
                         <ImageGallery :images="item.posters" type="posters" key-prefix="ps" />
                     </div>
                 </div>
@@ -266,7 +269,6 @@
             </section>
 
         </div>
-
     </AppLayout>
 </template>
 

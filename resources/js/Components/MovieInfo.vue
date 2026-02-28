@@ -24,9 +24,12 @@
 
         <GenreBadge v-if="item.genres?.length" :genres="item.genres" size="md" gap="md" class="mb-4" />
 
-        <p :class="overviewClass" class="leading-relaxed">
-            {{ item.overview || t('no_description') }}
-        </p>
+        <ExpandableText
+            :text="item.overview || ''"
+            :fallback="t('no_description')"
+            :text-class="overviewClass"
+            :line-clamp="4"
+        />
 
         <slot />
     </div>
@@ -37,6 +40,7 @@ import { useTranslation } from '../Composables/useTranslation.js';
 import MediaBadge from './MediaBadge.vue';
 import StarRating from './StarRating.vue';
 import GenreBadge from './GenreBadge.vue';
+import ExpandableText from './ExpandableText.vue';
 
 const { t } = useTranslation();
 
