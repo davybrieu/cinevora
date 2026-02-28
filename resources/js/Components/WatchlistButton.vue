@@ -1,5 +1,7 @@
 <template>
-    <Button :variant="isInWatchlist ? 'primary' : 'secondary'" :size="size" :class="buttonClass" @click.stop="toggle">
+        <Button :variant="isInWatchlist ? 'primary' : 'secondary'" :size="size" :class="buttonClass"
+            :title="isInWatchlist ? t('remove_from_watchlist') : t('add_to_watchlist')"
+            @click.stop="toggle">
         <HeartIconSolid v-if="isInWatchlist" class="h-5 w-5" />
         <HeartIcon v-else class="h-5 w-5" />
     </Button>

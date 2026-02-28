@@ -1,5 +1,5 @@
 <template>
-    <video :ref="bindVideoRef" :src="streamUrl" class="w-full h-full object-contain cursor-pointer" autoplay playinline
+    <video :ref="bindVideoRef" :src="effectiveStreamUrl" class="w-full h-full object-contain cursor-pointer" autoplay playinline
         @click.prevent="handleVideoClick" @dblclick.prevent="handleVideoDoubleClick" @timeupdate="handleTimeUpdate"
         @loadedmetadata="handleLoadedMetadata" @loadstart="handleVideoLoadStart" @waiting="handleVideoWaiting"
         @seeking="handleVideoWaiting" @canplay="handleVideoCanPlay" @playing="handleVideoPlaying"
@@ -12,6 +12,30 @@
                 loading="lazy" />
             <Spinner v-else size="lg" />
         </transition>
+    </div>
+
+    <div v-if="showUnsupportedOverlay"
+        class="absolute inset-0 z-[25] h-full w-full bg-black/80 flex flex-col items-center justify-center gap-4 px-6">
+        <p class="text-white text-center text-lg">{{ ffmpegError ? t('ffmpeg_transcode_failed') : t('ffmpeg_format_unsupported') }}</p>
+        <p v-if="ffmpegError" class="text-white/60 text-sm text-center max-w-md">{{ ffmpegError }}</p>
+        <div class="flex flex-wrap justify-center gap-3">
+            <button v-if="!ffmpegTranscode.isTranscoding.value"
+                type="button"
+                class="cursor-pointer px-6 py-3 rounded-lg bg-theme-accent text-white font-semibold hover:bg-theme-accent-hover transition"
+                @click="attemptFfmpegTranscode">
+                {{ t('ffmpeg_transcode_try') }}
+            </button>
+            <button v-if="ffmpegError"
+                type="button"
+                class="cursor-pointer px-6 py-3 rounded-lg border border-white/20 text-white font-semibold hover:bg-white/10 transition"
+                @click="showUnsupportedOverlay = false">
+                {{ t('back') }}
+            </button>
+        </div>
+        <div v-if="ffmpegTranscode.isTranscoding.value" class="flex flex-col items-center gap-2">
+            <Spinner size="lg" />
+            <p class="text-white/80">{{ t('ffmpeg_transcoding') }} {{ ffmpegTranscode.progress.value }}%</p>
+        </div>
     </div>
 
     <div v-show="controlsVisible" class="player-controls absolute inset-x-0 bottom-0 z-30 px-3 pb-3 sm:px-5 sm:pb-5">
@@ -159,6 +183,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useTranslation } from '@/Composables/useTranslation';
+import { useFfmpegTranscode } from '@/Composables/useFfmpegTranscode';
 import {
     ArrowsPointingInIcon,
     ArrowsPointingOutIcon,
@@ -201,6 +226,11 @@ const emit = defineEmits([
 const videoElement = ref(null);
 const isPlaying = ref(false);
 const isBuffering = ref(true);
+const showUnsupportedOverlay = ref(false);
+const transcodedBlobUrl = ref(null);
+const ffmpegError = ref(null);
+
+const ffmpegTranscode = useFfmpegTranscode();
 const singleClickTimer = ref(null);
 const isMuted = ref(false);
 const volume = ref(1);
@@ -250,7 +280,8 @@ const airPlaySupported = computed(() => {
 
 const formattedCurrentTime = computed(() => formatTime(props.currentTime));
 const formattedDuration = computed(() => formatTime(props.duration));
-const showCenterSpinner = computed(() => isBuffering.value || !isPlaying.value);
+const showCenterSpinner = computed(() => (isBuffering.value || !isPlaying.value) && !showUnsupportedOverlay.value);
+const effectiveStreamUrl = computed(() => transcodedBlobUrl.value || props.streamUrl);
 
 function getVideo() {
     return videoElement.value ?? unwrapElement(props.videoRef);
@@ -399,7 +430,35 @@ function handleVideoPause() {
 
 function handleVideoError() {
     isBuffering.value = false;
+    const video = getVideo();
+    const err = video?.error;
+    if (err?.code === 4) {
+        showUnsupportedOverlay.value = true;
+    }
+}
 
+function revokeTranscodedBlob() {
+    if (transcodedBlobUrl.value) {
+        URL.revokeObjectURL(transcodedBlobUrl.value);
+        transcodedBlobUrl.value = null;
+    }
+}
+
+async function attemptFfmpegTranscode() {
+    const url = props.streamUrl;
+    if (!url) return;
+
+    ffmpegError.value = null;
+    const blobUrl = await ffmpegTranscode.transcode(url);
+
+    if (blobUrl) {
+        revokeTranscodedBlob();
+        transcodedBlobUrl.value = blobUrl;
+        showUnsupportedOverlay.value = false;
+        isBuffering.value = true;
+    } else {
+        ffmpegError.value = ffmpegTranscode.error.value || 'Transcoding failed';
+    }
 }
 
 function handleSeekByRatio(ratio) {
@@ -418,11 +477,12 @@ async function togglePlayPause() {
     if (video.paused) {
         try {
             await video.play();
-        } catch (error) {
-            // Prevent unhandled promise rejection on unsupported formats (e.g. MKV in some browsers).
-            const maybeMessage = error?.message ? String(error.message) : '';
+        } catch (err) {
+            const maybeMessage = err?.message ? String(err.message) : '';
             if (maybeMessage.toLowerCase().includes('no supported sources')) {
-                castStatusMessage.value = 'This video format is not supported by your browser';
+                showUnsupportedOverlay.value = true;
+            } else {
+                castStatusMessage.value = maybeMessage || 'Playback failed';
             }
         }
     } else {
@@ -572,6 +632,7 @@ onMounted(() => {
 
 onUnmounted(() => {
     clearSingleClickTimer();
+    revokeTranscodedBlob();
     const video = getVideo();
     if (video) {
         video.removeEventListener('play', syncVideoState);
@@ -607,7 +668,9 @@ watch(() => unwrapElement(props.videoRef), (nextVideo, prevVideo) => {
 });
 
 watch(() => props.streamUrl, () => {
-    // Source switches can reset native video state; refresh controls.
+    revokeTranscodedBlob();
+    showUnsupportedOverlay.value = false;
+    ffmpegError.value = null;
     isBuffering.value = true;
     syncVideoState();
     syncAudioTracks();

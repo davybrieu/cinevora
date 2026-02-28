@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TmdbResource;
+use App\Models\ItemReaction;
 use App\Models\WatchProgress;
 use App\Services\TmdbService;
 use Illuminate\Http\Request;
@@ -34,6 +35,7 @@ class BrowseController extends Controller
 
         $profileId = $request->session()->get('profile_id');
         $result['items'] = WatchProgress::mergeProgressIntoItems($result['items'], $profileId);
+        $result['items'] = ItemReaction::mergeCountsIntoItems($result['items']);
 
         return Inertia::render('Browse', [
             'items' => $result['items'],
@@ -57,6 +59,7 @@ class BrowseController extends Controller
 
         $profileId = $request->session()->get('profile_id');
         $result['items'] = WatchProgress::mergeProgressIntoItems($result['items'], $profileId);
+        $result['items'] = ItemReaction::mergeCountsIntoItems($result['items']);
 
         return response()->json([
             'items' => $result['items'],

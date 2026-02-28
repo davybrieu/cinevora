@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TmdbResource;
+use App\Models\ItemReaction;
 use App\Models\WatchProgress;
 use App\Models\Watchlist;
 use App\Services\TmdbService;
@@ -42,6 +43,7 @@ class WatchlistController extends Controller
         })->filter()->values()->all();
 
         $items = WatchProgress::mergeProgressIntoItems($items, $profileId);
+        $items = ItemReaction::mergeCountsIntoItems($items);
 
         return Inertia::render('Watchlist', [
             'items' => $items,

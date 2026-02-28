@@ -19,17 +19,22 @@
                     <div class="flex-1">
                         <MovieInfo :item="item" />
                         <div class="mt-6 flex flex-wrap gap-3">
-                            <Button :href="watchUrl" variant="primary" size="md">
+                            <Button :href="watchUrl" variant="primary" size="md"
+                                :title="item.watch_progress_percentage ? t('continue') : t('watch')">
                                 <PlayIcon class="h-5 w-5" />
                                 <template v-if="item.watch_progress_percentage">{{ t('continue') }}</template>
                                 <template v-else>{{ t('watch') }}</template>
                             </Button>
-                            <Button variant="secondary" size="md" :disabled="!item.videos.length" @click="playTrailer">
+                            <Button variant="secondary" size="md" :disabled="!item.videos.length" @click="playTrailer"
+                                :title="item.videos.length ? t('watch_trailer') : t('no_trailer')">
                                 <FilmIcon class="h-5 w-5" />
                                 <template v-if="item.videos.length">{{ t('watch_trailer') }}</template>
                                 <template v-else>{{ t('no_trailer') }}</template>
                             </Button>
                             <WatchlistButton :item-id="item.id" :item-type="item.media_type" size="md"
+                                button-class="rounded-full" />
+                            <LikeDislikeButtons :item-id="item.id" :item-type="item.media_type"
+                                :like-count="item.like_count" :dislike-count="item.dislike_count" size="md"
                                 button-class="rounded-full" />
                         </div>
                     </div>
@@ -280,6 +285,7 @@ import MovieRow from '@/Components/MovieRow.vue';
 import CastRow from '@/Components/CastRow.vue';
 import Button from '@/Components/Button.vue';
 import WatchlistButton from '@/Components/WatchlistButton.vue';
+import LikeDislikeButtons from '@/Components/LikeDislikeButtons.vue';
 import { FilmIcon } from '@heroicons/vue/24/outline';
 import { PlayIcon } from '@heroicons/vue/24/solid';
 import SectionSubTitle from '@/Components/SectionSubTitle.vue';

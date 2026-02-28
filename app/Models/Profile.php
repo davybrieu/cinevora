@@ -23,6 +23,11 @@ class Profile extends Model
         return $this->hasMany(Watchlist::class);
     }
 
+    public function itemReactions(): HasMany
+    {
+        return $this->hasMany(ItemReaction::class);
+    }
+
     public function getAvatarUrlAttribute(): string
     {
         return asset("images/avatars/{$this->avatar}");

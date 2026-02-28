@@ -6,11 +6,10 @@ import Button from './Button.vue';
 
 <template>
     <div
-        class="w-full flex items-center bg-theme-accent/10 justify-between flex-col sm:flex-row px-8 lg:px-14 2xl:px-[6.5rem] gap-6 py-14  relative border-y border-y-theme-accent/10">
+        class="w-full flex items-center bg-theme-accent/10 justify-between flex-col sm:flex-row px-8 lg:px-14 2xl:px-[6.5rem] gap-6 py-14  relative">
         <div class="absolute inset-0 pub-premium-overlay z-10 pointer-events-none"></div>
-        <video
-            class="absolute inset-0 w-full h-full object-cover opacity-20 sm:opacity-50 z-0"
-            autoplay muted loop playsinline>
+        <video class="absolute inset-0 w-full h-full object-cover opacity-20 sm:opacity-50 z-0" autoplay muted loop
+            playsinline>
             <source src="/images/max.mp4" type="video/mp4">
         </video>
         <div class="flex flex-col gap-6 z-20 relative">

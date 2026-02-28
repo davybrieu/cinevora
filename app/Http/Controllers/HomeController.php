@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TmdbResource;
+use App\Models\ItemReaction;
 use App\Models\WatchProgress;
 use App\Services\TmdbService;
 use Illuminate\Http\Request;
@@ -64,7 +65,8 @@ class HomeController extends Controller
                 ->all();
         }
 
-        return $this->resource->withDetails($items);
+        $items = $this->resource->withDetails($items);
+        return ItemReaction::mergeCountsIntoItems($items);
     }
 
     /**
@@ -84,10 +86,13 @@ class HomeController extends Controller
                 $data = $this->tmdb->getByGenre($type, $id, $providerId);
                 $rawItems = $data['results'] ?? [];
                 $items = collect($rawItems)->map(fn($item) => array_merge($item, ['media_type' => $type]))->all();
+                $formattedItems = collect($items)->map(fn($item) => $this->resource->formatItem($item, $type))->values()->all();
+                $formattedItems = ItemReaction::mergeCountsIntoItems($formattedItems);
+
                 return [
                     'title' => $category['name'] ?? '',
                     'slug' => $category['slug'] ?? '',
-                    'items' => $items,
+                    'items' => $formattedItems,
                 ];
             })
             ->filter(fn($cat) => is_array($cat) && count($cat['items']) > 0)
@@ -123,6 +128,6 @@ class HomeController extends Controller
             $items[] = $item;
         }
 
-        return $items;
+        return ItemReaction::mergeCountsIntoItems($items);
     }
 }

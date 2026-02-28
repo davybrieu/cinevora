@@ -1,42 +1,21 @@
 <template>
     <div class="relative h-screen w-full overflow-hidden group select-none"
         :class="{ 'cursor-grab': !isDragging, 'cursor-grabbing': isDragging }"
-        @mousedown="onDragStart" @mousemove="onDragMove" @mouseup="onDragEnd" @mouseleave="onDragEnd"
-        @touchstart.passive="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd"
+        @mousedown="onDragStart" @touchstart.passive="onTouchStart"
+        @touchmove.prevent="onTouchMove" @touchend="onTouchEnd"
         @click.capture="(e) => { if (wasDragged) { e.preventDefault(); e.stopPropagation(); } }">
-        <Transition :name="slideDirection === 'prev' ? 'hero-slide-right' : 'hero-slide-left'">
-            <div v-if="activeItem" :key="activeItem.id" class="absolute inset-0 z-[1]">
-                <img v-if="activeItem.backdrop_path" :src="activeItem.backdrop_path" :alt="activeItem.title"
-                    class="h-full w-full object-cover pointer-events-none" loading="lazy" />
-                <div class="hero-gradient absolute inset-0"></div>
-                <div class="hero-gradient-left absolute inset-0"></div>
-
-                <div class="absolute bottom-[12%] left-0 z-10 max-w-xl px-4 sm:bottom-[18%] sm:max-w-2xl sm:px-8 md:bottom-[22%] md:px-16">
-                    <div class="animate-slide-up">
-                        <MovieInfo :item="activeItem" title-class="text-2xl sm:text-3xl md:text-4xl lg:text-6xl leading-tight drop-shadow-lg"
-                            overview-class="line-clamp-2 text-sm sm:line-clamp-3 sm:text-base md:text-lg text-theme-text/90">
-                            <div class="mt-4 flex flex-wrap items-center gap-2 sm:mt-7 sm:gap-3">
-                                <Link
-                                    :href="activeItem.media_type === 'tv' ? route('tv.show', { id: activeItem.id }) : route('movie.show', { id: activeItem.id })"
-                                    class="inline-flex items-center gap-2 rounded bg-theme-accent px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-lg transition hover:bg-theme-accent/90 active:bg-theme-accent/80 h-10 min-h-[40px] sm:px-6 sm:py-3 sm:text-base sm:h-12 sm:min-h-[48px]"
-                                >
-                                    <InformationCircleIcon class="h-5 w-5" />
-                                    {{ t('view_details') }}
-                                </Link>
-                                <div class="h-10 min-h-[40px] flex items-center sm:h-12 sm:min-h-[48px]">
-                                    <WatchlistButton
-                                        :item-id="activeItem.id"
-                                        :item-type="activeItem.media_type"
-                                        size="md"
-                                        button-class="rounded-full h-10 min-h-[40px] sm:h-12 sm:min-h-[48px] flex items-center justify-center"
-                                    />
-                                </div>
-                            </div>
-                        </MovieInfo>
-                    </div>
-                </div>
+        <!-- Single track: always visible, never switches - [prev, current, next] -->
+        <div ref="trackRef" class="absolute inset-0 z-[1] flex hero-track"
+            :class="{ 'hero-track-dragging': isDragging }"
+            style="min-width: 300%; will-change: transform;"
+            :style="{ transform: `translate3d(${trackTranslate}, 0, 0)` }"
+            @transitionend="onTrackTransitionEnd">
+            <div v-for="(slide, i) in trackSlides" :key="slide.id + '-' + i"
+                class="flex-shrink-0 h-full relative overflow-hidden"
+                style="width: 33.333%">
+                <HeroSlideContent :item="slide" />
             </div>
-        </Transition>
+        </div>
 
         <!-- Navigation dots -->
         <div class="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2 sm:bottom-8 sm:gap-2.5">
@@ -60,6 +39,7 @@ import { useTranslation } from '../Composables/useTranslation.js';
 import { InformationCircleIcon } from '@heroicons/vue/24/outline';
 import MovieInfo from './MovieInfo.vue';
 import WatchlistButton from './WatchlistButton.vue';
+import HeroSlideContent from './HeroSlideContent.vue';
 
 const { t } = useTranslation();
 
@@ -71,7 +51,9 @@ const currentIndex = ref(0);
 const progress = ref(0);
 const isDragging = ref(false);
 const wasDragged = ref(false);
-const slideDirection = ref('next');
+const dragDelta = ref(0);
+const animatingTo = ref(null); // 'prev' | 'next' | null
+const trackRef = ref(null);
 
 const SLIDE_DURATION = 7000;
 const TICK = 50;
@@ -83,49 +65,104 @@ let dragStartX = 0;
 let dragCurrentX = 0;
 
 const progressWidth = computed(() => Math.min((progress.value / SLIDE_DURATION) * 100, 100));
-const activeItem = computed(() => props.items[currentIndex.value] ?? null);
+
+// Always [prev, current, next] - single structure, never switches
+const trackSlides = computed(() => {
+    if (props.items.length === 0) return [];
+    const n = props.items.length;
+    const prevIdx = (currentIndex.value - 1 + n) % n;
+    const nextIdx = (currentIndex.value + 1) % n;
+    return [
+        props.items[prevIdx] ?? props.items[0],
+        props.items[currentIndex.value] ?? props.items[0],
+        props.items[nextIdx] ?? props.items[0],
+    ];
+});
+
+// -33.333% = current, -66.666% = next, 0 = prev
+const trackTranslate = computed(() => {
+    if (isDragging.value) {
+        return `calc(-33.333% + ${dragDelta.value}px)`;
+    }
+    if (animatingTo.value === 'next') return '-66.666%';
+    if (animatingTo.value === 'prev') return '0';
+    return '-33.333%';
+});
 
 function goTo(index) {
-    if (index === currentIndex.value) return;
-    slideDirection.value = index > currentIndex.value ? 'next' : 'prev';
-    currentIndex.value = index;
-    resetTimers();
+    if (index === currentIndex.value || animatingTo.value) return;
+    const diff = index - currentIndex.value;
+    const n = props.items.length;
+    const normalized = ((diff % n) + n) % n;
+    if (normalized === 1) {
+        animatingTo.value = 'next';
+    } else if (normalized === n - 1) {
+        animatingTo.value = 'prev';
+    } else {
+        currentIndex.value = index;
+        resetTimers();
+    }
 }
 
 function prev() {
-    slideDirection.value = 'prev';
-    currentIndex.value = (currentIndex.value - 1 + props.items.length) % props.items.length;
-    resetTimers();
+    if (animatingTo.value) return;
+    animatingTo.value = 'prev';
 }
 
 function next() {
-    slideDirection.value = 'next';
-    currentIndex.value = (currentIndex.value + 1) % props.items.length;
+    if (animatingTo.value) return;
+    animatingTo.value = 'next';
+}
+
+function onTrackTransitionEnd(e) {
+    if (e.propertyName !== 'transform' || !animatingTo.value || !trackRef.value) return;
+    trackRef.value.style.transition = 'none';
+    if (animatingTo.value === 'next') {
+        currentIndex.value = (currentIndex.value + 1) % props.items.length;
+    } else if (animatingTo.value === 'prev') {
+        currentIndex.value = (currentIndex.value - 1 + props.items.length) % props.items.length;
+    }
+    animatingTo.value = null;
     resetTimers();
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            if (trackRef.value) trackRef.value.style.transition = '';
+        });
+    });
 }
 
 function onDragStart(e) {
     if (props.items.length <= 1) return;
     isDragging.value = true;
     wasDragged.value = false;
-    dragStartX = e.pageX;
-    dragCurrentX = e.pageX;
+    dragDelta.value = 0;
+    dragStartX = e.pageX ?? e.touches?.[0]?.pageX ?? 0;
+    dragCurrentX = dragStartX;
+    document.addEventListener('mousemove', onDocumentDragMove);
+    document.addEventListener('mouseup', onDocumentDragEnd);
 }
 
-function onDragMove(e) {
+function onDocumentDragMove(e) {
     if (!isDragging.value) return;
     e.preventDefault();
-    dragCurrentX = e.pageX;
-    const delta = Math.abs(dragCurrentX - dragStartX);
-    if (delta > 5) wasDragged.value = true;
+    dragCurrentX = e.pageX ?? e.touches?.[0]?.pageX ?? dragCurrentX;
+    const delta = dragCurrentX - dragStartX;
+    if (Math.abs(delta) > 5) wasDragged.value = true;
+    dragDelta.value = delta;
 }
 
-function onDragEnd() {
+function onDocumentDragEnd() {
     if (!isDragging.value) return;
+    document.removeEventListener('mousemove', onDocumentDragMove);
+    document.removeEventListener('mouseup', onDocumentDragEnd);
     const delta = dragCurrentX - dragStartX;
-    if (delta < -DRAG_THRESHOLD) next();
-    else if (delta > DRAG_THRESHOLD) prev();
     isDragging.value = false;
+    if (delta < -DRAG_THRESHOLD) {
+        animatingTo.value = 'next';
+    } else if (delta > DRAG_THRESHOLD) {
+        animatingTo.value = 'prev';
+    }
+    dragDelta.value = 0;
     setTimeout(() => { wasDragged.value = false; }, 50);
 }
 
@@ -133,24 +170,30 @@ function onTouchStart(e) {
     if (props.items.length <= 1) return;
     isDragging.value = true;
     wasDragged.value = false;
+    dragDelta.value = 0;
     dragStartX = e.touches[0].pageX;
-    dragCurrentX = e.touches[0].pageX;
+    dragCurrentX = dragStartX;
 }
 
 function onTouchMove(e) {
     if (!isDragging.value) return;
     e.preventDefault();
     dragCurrentX = e.touches[0].pageX;
-    const delta = Math.abs(dragCurrentX - dragStartX);
-    if (delta > 5) wasDragged.value = true;
+    const delta = dragCurrentX - dragStartX;
+    if (Math.abs(delta) > 5) wasDragged.value = true;
+    dragDelta.value = delta;
 }
 
-function onTouchEnd() {
+function onTouchEnd(e) {
     if (!isDragging.value) return;
-    const delta = dragCurrentX - dragStartX;
-    if (delta < -DRAG_THRESHOLD) next();
-    else if (delta > DRAG_THRESHOLD) prev();
+    const delta = (e.changedTouches?.[0]?.pageX ?? dragCurrentX) - dragStartX;
     isDragging.value = false;
+    if (delta < -DRAG_THRESHOLD) {
+        animatingTo.value = 'next';
+    } else if (delta > DRAG_THRESHOLD) {
+        animatingTo.value = 'prev';
+    }
+    dragDelta.value = 0;
     setTimeout(() => { wasDragged.value = false; }, 50);
 }
 
@@ -180,56 +223,17 @@ onMounted(() => {
 onUnmounted(() => {
     clearInterval(slideTimer);
     clearInterval(progressTimer);
+    document.removeEventListener('mousemove', onDocumentDragMove);
+    document.removeEventListener('mouseup', onDocumentDragEnd);
 });
 </script>
 
 <style scoped>
-.hero-slide-left-enter-active,
-.hero-slide-left-leave-active,
-.hero-slide-right-enter-active,
-.hero-slide-right-leave-active {
-    transition: transform 0.7s ease;
+.hero-track {
+    transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-.hero-slide-left-enter-active,
-.hero-slide-right-enter-active {
-    z-index: 2;
-}
-
-.hero-slide-left-leave-active,
-.hero-slide-right-leave-active {
-    z-index: 1;
-}
-
-.hero-slide-left-enter-from {
-    transform: translateX(100%);
-}
-
-.hero-slide-left-enter-to {
-    transform: translateX(0);
-}
-
-.hero-slide-left-leave-from {
-    transform: translateX(0);
-}
-
-.hero-slide-left-leave-to {
-    transform: translateX(-100%);
-}
-
-.hero-slide-right-enter-from {
-    transform: translateX(-100%);
-}
-
-.hero-slide-right-enter-to {
-    transform: translateX(0);
-}
-
-.hero-slide-right-leave-from {
-    transform: translateX(0);
-}
-
-.hero-slide-right-leave-to {
-    transform: translateX(100%);
+.hero-track-dragging {
+    transition: none;
 }
 </style>

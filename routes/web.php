@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrendingController;
 use App\Http\Controllers\WatchController;
 use App\Http\Controllers\WatchlistController;
+use App\Http\Controllers\ItemReactionController;
 use App\Http\Controllers\WatchProgressController;
 use App\Http\Controllers\ViewingHistoryController;
 use App\Http\Controllers\SettingsController;
@@ -78,6 +79,8 @@ Route::middleware(['auth', 'profile'])->group(function () {
 
     Route::get('/watchlist', [WatchlistController::class, 'index'])->name('watchlist.index');
     Route::post('/watchlist/toggle', [WatchlistController::class, 'toggle'])->name('watchlist.toggle');
+
+    Route::post('/item-reactions/set', [ItemReactionController::class, 'set'])->name('item_reactions.set');
 
     Route::get('/watch/movie/{id}', [WatchController::class, 'movie'])->name('watch.movie')->where('id', '[0-9]+');
     Route::get('/watch/tv/{id}-{season}-{episode}', [WatchController::class, 'tv'])->name('watch.tv')->where(['id' => '[0-9]+', 'season' => '[0-9]+', 'episode' => '[0-9]+']);

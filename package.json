@@ -20,6 +20,8 @@
         "vue-tsc": "^3.2.3"
     },
     "dependencies": {
+        "@ffmpeg/ffmpeg": "^0.12.15",
+        "@ffmpeg/util": "^0.12.2",
         "@heroicons/vue": "^2.2.0",
         "@inertiajs/vue3": "^2.0.15",
         "@vue/server-renderer": "^3.5.21",

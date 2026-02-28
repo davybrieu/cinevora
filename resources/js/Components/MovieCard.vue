@@ -4,6 +4,10 @@
             :style="cardWidth ? { width: cardWidth + 'px' } : {}" @click="showDetail = true">
             <PosterImage :src="item.poster_path" :alt="item.title" rounded="rounded-lg" class="aspect-[3/5] w-full" />
 
+            <!-- Bottom shadow for watch progress bar readability -->
+            <div v-if="watchProgressPercent != null && watchProgressPercent > 0"
+                class="absolute inset-x-0 bottom-0 z-[1] h-16 bg-gradient-to-t from-black/80 to-transparent pointer-events-none rounded-b-lg" />
+
             <!-- Top badges bar: Harmonize badge height -->
             <div
                 class="absolute left-2 right-2 top-2 z-[2] flex flex-row items-start justify-between pointer-events-none">
@@ -56,7 +60,7 @@
                                 </div>
                                 <div class="hero-gradient absolute inset-0"></div>
                                 <button type="button" class="cursor-pointer absolute right-4 top-4"
-                                    @click="showDetail = false">
+                                    :title="t('close')" @click="showDetail = false">
                                     <XMarkIcon class="h-5 w-5 text-white" />
                                 </button>
                             </div>
@@ -65,11 +69,14 @@
                                     overview-class="line-clamp-4 text-sm text-theme-text">
                                     <div class="mt-5 flex flex-wrap gap-3">
                                         <Button :href="detailUrl" variant="primary" size="md"
-                                            @click="showDetail = false">
+                                            :title="t('view_details')" @click="showDetail = false">
                                             <InformationCircleIcon class="h-4 w-4" />
                                             {{ t('view_details') }}
                                         </Button>
                                         <WatchlistButton :item-id="item.id" :item-type="item.media_type" size="md"
+                                            button-class="rounded-full" />
+                                        <LikeDislikeButtons :item-id="item.id" :item-type="item.media_type"
+                                            :like-count="item.like_count" :dislike-count="item.dislike_count" size="md"
                                             button-class="rounded-full" />
                                     </div>
                                 </MovieInfo>
@@ -92,6 +99,7 @@ import PosterImage from './PosterImage.vue';
 import MovieInfo from './MovieInfo.vue';
 import Button from './Button.vue';
 import WatchlistButton from './WatchlistButton.vue';
+import LikeDislikeButtons from './LikeDislikeButtons.vue';
 
 const { t } = useTranslation();
 

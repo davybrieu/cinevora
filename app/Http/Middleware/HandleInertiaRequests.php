@@ -81,12 +81,16 @@ class HandleInertiaRequests extends Middleware
             return null;
         }
 
+        $profile->load('itemReactions');
+
         return [
             'id' => $profile->id,
             'name' => $profile->name,
             'avatar' => $profile->avatar,
             'avatar_url' => $profile->avatar_url,
             'watchlist_ids' => $profile->watchlists->map(fn($w) => ['type' => $w->item_type, 'id' => $w->item_id])->toArray(),
+            'like_ids' => $profile->itemReactions->where('reaction', 'like')->map(fn($r) => ['type' => $r->item_type, 'id' => $r->item_id])->values()->toArray(),
+            'dislike_ids' => $profile->itemReactions->where('reaction', 'dislike')->map(fn($r) => ['type' => $r->item_type, 'id' => $r->item_id])->values()->toArray(),
         ];
     }
 

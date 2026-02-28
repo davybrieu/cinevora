@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TmdbResource;
+use App\Models\ItemReaction;
 use App\Services\TmdbService;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -34,8 +35,14 @@ class DetailController extends Controller
 
         $profileId = request()->session()->get('profile_id');
 
+        $item = $this->resource->formatDetail($data, $type, $profileId);
+        $similar = $item['similar'] ?? [];
+        $allItems = ItemReaction::mergeCountsIntoItems(array_merge([$item], $similar));
+        $item = $allItems[0];
+        $item['similar'] = array_slice($allItems, 1);
+
         return Inertia::render('Detail', [
-            'item' => $this->resource->formatDetail($data, $type, $profileId),
+            'item' => $item,
         ]);
     }
 
