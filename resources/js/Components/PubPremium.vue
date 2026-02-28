@@ -23,7 +23,7 @@ import Button from './Button.vue';
             </p>
         </div>
         <div class="flex flex-col items-center sm:items-end xl:flex-row gap-4 z-20 relative">
-            <Button href="/subscription#advantages" variant="primary" size="lg">
+            <Button href="#" variant="primary" size="lg">
                 <StarIcon class="w-5 h-5" />
                 Découvrir l'abonnement
             </Button>
